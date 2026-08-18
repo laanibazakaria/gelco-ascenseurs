@@ -930,3 +930,22 @@ a { color: var(--navy); text-decoration: none; }
 @media (max-width: 600px) {
   .lb-main img { height: 250px; }
 }
+
+
+/* ---------- Avis clients ---------- */
+.stars { color: #F1A33C; font-size: 17px; letter-spacing: 2px; margin-bottom: 10px; }
+.testimonial p.quote { color: var(--text); font-size: 15px; font-style: italic; flex: 1; }
+.testimonial .who { margin-top: 14px; font-size: 13.5px; color: var(--muted); font-weight: 600; }
+.gbadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-weight: 700;
+  color: var(--navy-deep);
+  box-shadow: var(--shadow);
+}
+.gbadge .stars { margin: 0; font-size: 15px; }
