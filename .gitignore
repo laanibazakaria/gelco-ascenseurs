@@ -1,0 +1,9 @@
+# Documents internes — ne jamais publier (facture client, RIB, photos brutes)
+Gelcoinfo/
+*.pdf
+
+# Config locale
+.claude/
+
+# Document de travail interne
+benchmark-sites-ascensoristes.md
