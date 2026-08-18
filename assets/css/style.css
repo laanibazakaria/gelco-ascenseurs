@@ -83,7 +83,8 @@ a { color: var(--navy); text-decoration: none; }
   gap: 16px;
   flex-wrap: wrap;
 }
-.topbar a { color: #fff; font-weight: 600; white-space: nowrap; }
+.topbar a { color: #fff; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.topbar a .ti { width: 14px; height: 14px; stroke: var(--accent); flex: none; }
 .topbar a:hover { color: var(--accent); }
 .topbar-links { display: flex; gap: 22px; }
 
