@@ -62,7 +62,7 @@ if (quoteForm) {
     if (details) lines.push(L.details + details);
 
     // Numéro WhatsApp de Gelco (à remplacer par le vrai numéro)
-    const waNumber = '212661214264';
+    const waNumber = '212661896033';
     const url = 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent(lines.join('\n'));
     window.open(url, '_blank');
 
