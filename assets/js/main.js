@@ -133,3 +133,67 @@ if ('IntersectionObserver' in window) {
   }, { threshold: 0.5 });
   document.querySelectorAll('.stat-num').forEach(el => statIO.observe(el));
 }
+
+
+// ---- Galerie lightbox du catalogue de pièces ----
+const galleryCards = document.querySelectorAll('.part-card[data-imgs]');
+if (galleryCards.length) {
+  const isAr = document.documentElement.lang === 'ar';
+  const prefix = isAr ? '../assets/img/' : 'assets/img/';
+  const lb = document.createElement('div');
+  lb.className = 'lightbox';
+  lb.innerHTML =
+    '<div class="lb-box">' +
+    '<button class="lb-close" aria-label="Fermer">✕</button>' +
+    '<div class="lb-main">' +
+    '<img id="lbImg" alt="">' +
+    '<button class="lb-arrow lb-prev">‹</button>' +
+    '<button class="lb-arrow lb-next">›</button>' +
+    '</div>' +
+    '<div class="lb-thumbs" id="lbThumbs"></div>' +
+    '<div class="lb-body"><h3 id="lbTitle"></h3><p id="lbDesc"></p>' +
+    '<a class="btn btn-accent" id="lbCta" href="contact.html">' + (isAr ? 'اطلب عرض سعر لهذه القطعة' : 'Demander un devis pour cette pièce') + '</a></div>' +
+    '</div>';
+  document.body.appendChild(lb);
+
+  const lbImg = lb.querySelector('#lbImg');
+  const lbThumbs = lb.querySelector('#lbThumbs');
+  let imgs = [], idx = 0;
+
+  const show = i => {
+    idx = (i + imgs.length) % imgs.length;
+    lbImg.src = prefix + imgs[idx];
+    lbThumbs.querySelectorAll('img').forEach((t, k) => t.classList.toggle('active', k === idx));
+  };
+
+  galleryCards.forEach(card => {
+    card.addEventListener('click', () => {
+      imgs = card.dataset.imgs.split(',');
+      lb.querySelector('#lbTitle').textContent = card.querySelector('h3').textContent;
+      lb.querySelector('#lbDesc').textContent = card.querySelector('.part-body p').textContent;
+      lbThumbs.innerHTML = '';
+      imgs.forEach((src, k) => {
+        const t = document.createElement('img');
+        t.src = prefix + src;
+        t.alt = '';
+        t.addEventListener('click', e => { e.stopPropagation(); show(k); });
+        lbThumbs.appendChild(t);
+      });
+      show(0);
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  const close = () => { lb.classList.remove('open'); document.body.style.overflow = ''; };
+  lb.querySelector('.lb-close').addEventListener('click', close);
+  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+  lb.querySelector('.lb-prev').addEventListener('click', () => show(idx - 1));
+  lb.querySelector('.lb-next').addEventListener('click', () => show(idx + 1));
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(idx - 1);
+    if (e.key === 'ArrowRight') show(idx + 1);
+  });
+}
