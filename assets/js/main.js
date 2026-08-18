@@ -70,3 +70,66 @@ if (quoteForm) {
     if (success) success.classList.add('visible');
   });
 }
+
+
+// ---- Animations ----
+
+// Barre de progression de défilement
+const progress = document.createElement('div');
+progress.id = 'scrollProgress';
+document.body.appendChild(progress);
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  progress.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+}, { passive: true });
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Apparition au défilement
+if (!reduceMotion && 'IntersectionObserver' in window) {
+  let ioAlive = false;
+  const io = new IntersectionObserver(entries => {
+    ioAlive = true;
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  // Sécurité : si l'observateur ne répond pas, tout afficher
+  setTimeout(() => {
+    if (!ioAlive) document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  }, 2000);
+  document.querySelectorAll('.card, .project-card, .step, .persona-card, .cert-card, .section-head, .why-item, .brand-chip')
+    .forEach((el, i) => {
+      el.classList.add('reveal');
+      el.style.animationDelay = (i % 3) * 0.09 + 's';
+      io.observe(el);
+    });
+}
+
+// Compteurs des statistiques (montée progressive, comme un ascenseur)
+if ('IntersectionObserver' in window) {
+  const fmt = (n, spaced) => spaced ? n.toLocaleString('fr-FR') : String(n);
+  const statIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      statIO.unobserve(e.target);
+      const el = e.target;
+      const original = el.textContent;
+      const m = original.match(/\d[\d\s ]*/);
+      if (!m) return;
+      const target = parseInt(m[0].replace(/[\s ]/g, ''), 10);
+      if (!target || reduceMotion) return;
+      const spaced = /[\s ]/.test(m[0].trim());
+      const t0 = performance.now();
+      const dur = 1400;
+      const tick = now => {
+        const p = Math.min((now - t0) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = original.replace(m[0], fmt(Math.round(target * eased), spaced || target >= 1000));
+        if (p < 1) requestAnimationFrame(tick); else el.textContent = original;
+      };
+      requestAnimationFrame(tick);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-num').forEach(el => statIO.observe(el));
+}
