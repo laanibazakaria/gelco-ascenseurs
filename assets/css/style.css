@@ -83,7 +83,7 @@ a { color: var(--navy); text-decoration: none; }
   gap: 16px;
   flex-wrap: wrap;
 }
-.topbar a { color: #fff; font-weight: 600; }
+.topbar a { color: #fff; font-weight: 600; white-space: nowrap; }
 .topbar a:hover { color: var(--accent); }
 .topbar-links { display: flex; gap: 22px; }
 
@@ -711,8 +711,10 @@ a { color: var(--navy); text-decoration: none; }
   .grid-3, .grid-4, .grid-2, .steps { grid-template-columns: 1fr; }
   .form-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
-  .topbar-inner { justify-content: center; }
+  .topbar-inner { justify-content: center; padding: 4px 0; }
   .topbar .topbar-hours { display: none; }
+  .topbar-links { gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .topbar-links a[href^="mailto"] { display: none; }
   .section { padding: 56px 0; }
   .form-card { padding: 26px 20px; }
 }
