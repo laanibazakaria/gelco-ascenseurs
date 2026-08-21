@@ -475,9 +475,9 @@ a { color: var(--navy); text-decoration: none; }
 }
 .part-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
 .part-visual {
-  background: linear-gradient(135deg, var(--bg-soft), #DCE8F1);
+  background-color: var(--bg-soft);
   display: flex; align-items: center; justify-content: center;
-  height: 160px;
+  height: 200px;
 }
 .part-visual svg { width: 56px; height: 56px; }
 .part-body { padding: 20px 20px 22px; display: flex; flex-direction: column; flex: 1; }
@@ -563,10 +563,11 @@ a { color: var(--navy); text-decoration: none; }
 }
 .project-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
 .project-visual {
-  height: 170px;
+  height: 230px;
   display: flex; align-items: flex-end;
   padding: 16px;
   position: relative;
+  background-color: var(--bg-soft);
 }
 .project-city {
   background: rgba(4,30,51,.75);
@@ -888,7 +889,7 @@ a { color: var(--navy); text-decoration: none; }
 }
 .lb-main img {
   width: 100%;
-  height: 380px;
+  height: 460px;
   object-fit: contain;
   display: block;
 }
@@ -917,7 +918,8 @@ a { color: var(--navy); text-decoration: none; }
 }
 .lb-thumbs img {
   width: 72px; height: 54px;
-  object-fit: cover;
+  object-fit: contain;
+  background: var(--bg-alt);
   border-radius: 6px;
   cursor: pointer;
   border: 2px solid transparent;
