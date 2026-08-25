@@ -475,10 +475,29 @@ a { color: var(--navy); text-decoration: none; }
 }
 .part-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
 .part-visual {
+  position: relative;
+  overflow: hidden;
   background-color: var(--bg-soft);
+  aspect-ratio: 4 / 3;
+}
+.part-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--ph);
+  background-size: cover;
+  background-position: center;
+  filter: blur(22px) saturate(.75) brightness(.92);
+  transform: scale(1.25);
+}
+.part-visual img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
 }
-.part-visual img { width: 100%; height: auto; max-height: 340px; object-fit: contain; display: block; }
 .part-visual svg { width: 56px; height: 56px; }
 .part-body { padding: 20px 20px 22px; display: flex; flex-direction: column; flex: 1; }
 .part-cat {
@@ -564,12 +583,31 @@ a { color: var(--navy); text-decoration: none; }
 .project-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
 .project-visual {
   position: relative;
+  overflow: hidden;
   background-color: var(--bg-soft);
+  aspect-ratio: 4 / 3;
+}
+.project-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--ph);
+  background-size: cover;
+  background-position: center;
+  filter: blur(22px) saturate(.75) brightness(.92);
+  transform: scale(1.25);
+}
+.project-visual img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
 }
-.project-visual img { width: 100%; height: auto; max-height: 340px; object-fit: contain; display: block; }
 .project-city {
   position: absolute;
+  z-index: 2;
   bottom: 14px;
   inset-inline-start: 14px;
   background: rgba(4,30,51,.75);
@@ -738,6 +776,7 @@ a { color: var(--navy); text-decoration: none; }
 [dir="rtl"] .brand-chip,
 [dir="rtl"] .project-city {
   position: absolute;
+  z-index: 2;
   bottom: 14px;
   inset-inline-start: 14px;
   letter-spacing: 0;
@@ -957,3 +996,46 @@ a { color: var(--navy); text-decoration: none; }
   box-shadow: var(--shadow);
 }
 .gbadge .stars { margin: 0; font-size: 15px; }
+
+
+/* ---------- Formulaire : envoi par e-mail ---------- */
+.form-help {
+  font-size: 13.5px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 12px;
+}
+.btn-ghost {
+  background: transparent;
+  border: 2px solid var(--line);
+  color: var(--navy);
+}
+.btn-ghost:hover { border-color: var(--navy); background: var(--bg-alt); }
+.form-actions { display: grid; gap: 10px; }
+
+/* ---------- Bandeau avis Google ---------- */
+.google-review-band {
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 30px 28px;
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto;
+}
+.google-review-band .stars { font-size: 26px; margin-bottom: 6px; }
+.google-review-band p { color: var(--muted); font-size: 15.5px; margin-top: 10px; }
+
+
+/* ---------- Mentions légales ---------- */
+.legal-grid { display: grid; gap: 16px 30px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.legal-grid > div { display: flex; flex-direction: column; gap: 3px; }
+.legal-grid dt {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.legal-grid dd { margin: 0; font-size: 15.5px; color: var(--text); }
+.legal-grid a { color: var(--navy); text-decoration: underline; text-underline-offset: 2px; }

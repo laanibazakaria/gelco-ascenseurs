@@ -41,12 +41,12 @@ if (quoteForm) {
       intro: 'مرحباً جيلكو للمصاعد، أرغب في الحصول على عرض سعر.',
       type: '— نوع الطلب: ', brand: '— ماركة المصعد: ', brandNone: 'غير محددة',
       building: '— نوع المبنى: ', floors: '— عدد الطوابق: ', floorsNone: 'غير محدد',
-      city: '— المدينة: ', name: '— الاسم: ', phone: '— الهاتف: ', details: '— تفاصيل: '
+      city: '— المدينة: ', name: '— الاسم: ', phone: '— الهاتف: ', details: '— تفاصيل: ', mail: '— البريد الإلكتروني: '
     } : {
       intro: 'Bonjour Gelco Ascenseurs, je souhaite un devis.',
       type: '— Type de demande : ', brand: '— Marque de l’ascenseur : ', brandNone: 'Non précisée',
       building: '— Type de bâtiment : ', floors: '— Nombre de niveaux : ', floorsNone: 'Non précisé',
-      city: '— Ville : ', name: '— Nom : ', phone: '— Téléphone : ', details: '— Détails : '
+      city: '— Ville : ', name: '— Nom : ', phone: '— Téléphone : ', details: '— Détails : ', mail: '— E-mail : '
     };
     const lines = [
       L.intro,
@@ -61,13 +61,39 @@ if (quoteForm) {
     const details = get('qMessage');
     if (details) lines.push(L.details + details);
 
-    // Numéro WhatsApp de Gelco (à remplacer par le vrai numéro)
-    const waNumber = '212661896033';
-    const url = 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent(lines.join('\n'));
-    window.open(url, '_blank');
+    const mail = get('qEmail');
+    if (mail) lines.push(L.mail + mail);
+    const corps = lines.join(String.fromCharCode(10));
+
+    // Le bouton cliqué détermine le canal d'envoi
+    const parEmail = quoteForm.dataset.canal === 'email';
+    quoteForm.dataset.canal = '';
+
+    if (parEmail) {
+      const sujet = isArabic ? 'طلب عرض سعر — جيلكو للمصاعد' : 'Demande de devis — Site GELCO';
+      window.location.href = 'mailto:grand.elevators.company@gmail.com'
+        + '?subject=' + encodeURIComponent(sujet)
+        + '&body=' + encodeURIComponent(corps);
+    } else {
+      window.open('https://wa.me/212661896033?text=' + encodeURIComponent(corps), '_blank');
+    }
 
     const success = document.getElementById('formSuccess');
-    if (success) success.classList.add('visible');
+    if (success) {
+      success.textContent = parEmail
+        ? (isArabic
+            ? 'فُتحت رسالتكم في برنامج البريد — لم يبقَ سوى الضغط على « إرسال ». شكراً لكم!'
+            : 'Votre demande est ouverte dans votre messagerie — il ne reste plus qu\u2019à appuyer sur « Envoyer ». Merci !')
+        : (isArabic
+            ? 'طلبكم جاهز في واتساب — لم يبقَ سوى الضغط على « إرسال ». شكراً لكم!'
+            : 'Votre demande est prête dans WhatsApp — il ne reste plus qu\u2019à appuyer sur « Envoyer ». Merci !');
+      success.classList.add('visible');
+    }
+  });
+
+  // Mémorise le canal choisi avant la validation
+  document.querySelectorAll('[data-canal]').forEach(btn => {
+    btn.addEventListener('click', () => { quoteForm.dataset.canal = btn.dataset.canal; });
   });
 }
 
@@ -197,3 +223,10 @@ if (galleryCards.length) {
     if (e.key === 'ArrowRight') show(idx + 1);
   });
 }
+
+
+// ---- Fond flouté derrière chaque photo : rien n'est coupé, plus de bandes vides ----
+document.querySelectorAll('.part-visual img, .project-visual img').forEach(img => {
+  const src = img.getAttribute('src');
+  if (src) img.parentElement.style.setProperty('--ph', 'url("' + src + '")');
+});
