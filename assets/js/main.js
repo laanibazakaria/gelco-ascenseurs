@@ -10,20 +10,40 @@ if (navToggle && mainNav) {
   );
 }
 
-// Filtres du catalogue de pièces
+// Filtres du catalogue de pièces — l'état est conservé dans l'URL
 const filterBar = document.querySelector('.filter-bar');
 if (filterBar) {
   const buttons = filterBar.querySelectorAll('.filter-btn');
   const cards = document.querySelectorAll('.part-card[data-cat]');
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const cat = btn.dataset.filter;
-      cards.forEach(card => {
-        card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
-      });
+
+  const appliquer = (cat, majUrl) => {
+    const connue = [...buttons].some(b => b.dataset.filter === cat);
+    if (!connue) cat = 'all';
+    buttons.forEach(b => {
+      const actif = b.dataset.filter === cat;
+      b.classList.toggle('active', actif);
+      b.setAttribute('aria-pressed', actif ? 'true' : 'false');
     });
+    cards.forEach(card => {
+      card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+    });
+    if (majUrl) {
+      const url = new URL(location.href);
+      if (cat === 'all') url.searchParams.delete('categorie');
+      else url.searchParams.set('categorie', cat);
+      history.pushState({ cat }, '', url);
+    }
+  };
+
+  buttons.forEach(btn => {
+    btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
+    btn.addEventListener('click', () => appliquer(btn.dataset.filter, true));
+  });
+
+  // Ouverture directe sur une catégorie, et retour arrière du navigateur
+  appliquer(new URLSearchParams(location.search).get('categorie') || 'all', false);
+  window.addEventListener('popstate', () => {
+    appliquer(new URLSearchParams(location.search).get('categorie') || 'all', false);
   });
 }
 
@@ -241,6 +261,8 @@ if (galleryCards.length) {
 
 // ---- Fond flouté derrière chaque photo : rien n'est coupé, plus de bandes vides ----
 document.querySelectorAll('.part-visual img, .project-visual img').forEach(img => {
-  const src = img.getAttribute('src');
+  // img.src donne l'adresse absolue : une adresse relative serait resolue
+  // depuis la feuille de style (/assets/css/) et non depuis la page.
+  const src = img.src;
   if (src) img.parentElement.style.setProperty('--ph', 'url("' + src + '")');
 });

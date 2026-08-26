@@ -1144,3 +1144,24 @@ h1, h2, h3,
 
 /* Ancres de titres non masquées par l'en-tête collant */
 [id] { scroll-margin-top: 92px; }
+
+
+/* ============================================================
+   Second passage Web Interface Guidelines
+   ============================================================ */
+
+/* Le champ complet réagit quand on entre dedans au clavier */
+.form-field:focus-within label { color: var(--accent); }
+.contact-line:focus-within strong { color: var(--accent); }
+
+/* Un numéro de téléphone ne se coupe jamais en fin de ligne */
+a[href^="tel:"], .footer-contact a, .contact-line a { white-space: nowrap; }
+
+/* L'animation des capteurs porte sur un conteneur, pas sur la forme */
+.hero-art .capteur {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Le filtre actif est annoncé aux lecteurs d'écran */
+.filter-btn[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
