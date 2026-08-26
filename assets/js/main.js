@@ -260,9 +260,15 @@ if (galleryCards.length) {
 
 
 // ---- Fond flouté derrière chaque photo : rien n'est coupé, plus de bandes vides ----
+// Fond floute derriere chaque photo : rien n'est coupe, plus de bandes vides.
+// Le fond est pose une fois la photo chargee : il reutilise donc le meme
+// telechargement, et le chargement differe natif (loading="lazy") continue
+// d'operer. img.src donne l'adresse absolue ; une adresse relative serait
+// resolue depuis la feuille de style (/assets/css/) et non depuis la page.
 document.querySelectorAll('.part-visual img, .project-visual img').forEach(img => {
-  // img.src donne l'adresse absolue : une adresse relative serait resolue
-  // depuis la feuille de style (/assets/css/) et non depuis la page.
-  const src = img.src;
-  if (src) img.parentElement.style.setProperty('--ph', 'url("' + src + '")');
+  const poser = () => {
+    if (img.src) img.parentElement.style.setProperty('--ph', 'url("' + img.src + '")');
+  };
+  if (img.complete && img.naturalWidth) poser();
+  else img.addEventListener('load', poser, { once: true });
 });

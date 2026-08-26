@@ -1165,3 +1165,10 @@ a[href^="tel:"], .footer-contact a, .contact-line a { white-space: nowrap; }
 
 /* Le filtre actif est annoncé aux lecteurs d'écran */
 .filter-btn[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+
+/* Les cartes hors écran ne sont calculées qu'à l'approche */
+.project-card, .part-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
+}
