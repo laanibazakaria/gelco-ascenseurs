@@ -458,7 +458,7 @@ a { color: var(--navy); text-decoration: none; }
   font-size: 14px;
   cursor: pointer;
   font-family: inherit;
-  transition: all .18s;
+  transition: border-color .18s, color .18s, background .18s;
 }
 .filter-btn:hover { border-color: var(--navy); color: var(--navy); }
 .filter-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
@@ -661,9 +661,10 @@ a { color: var(--navy); text-decoration: none; }
 .form-field input:focus,
 .form-field select:focus,
 .form-field textarea:focus {
-  outline: none;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
   border-color: var(--navy);
-  box-shadow: 0 0 0 3px rgba(10,61,98,.12);
+  box-shadow: 0 0 0 3px rgba(10,61,98,.22);
 }
 .form-note { font-size: 13px; color: var(--muted); margin-top: 14px; }
 .form-success {
@@ -1039,3 +1040,107 @@ a { color: var(--navy); text-decoration: none; }
 }
 .legal-grid dd { margin: 0; font-size: 15.5px; color: var(--text); }
 .legal-grid a { color: var(--navy); text-decoration: underline; text-underline-offset: 2px; }
+
+
+/* ============================================================
+   Conformité Web Interface Guidelines
+   ============================================================ */
+
+/* Le navigateur adapte barres de défilement et champs natifs */
+:root { color-scheme: light; }
+
+/* Lien d'évitement : invisible jusqu'à la tabulation */
+.skip-link {
+  position: fixed;
+  top: -120px;
+  inset-inline-start: 0;
+  z-index: 300;
+  background: var(--navy-deep);
+  color: #fff;
+  padding: 13px 22px;
+  font-weight: 700;
+  border-radius: 0 0 8px 0;
+  transition: top .16s ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 0;
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+/* Anneau de focus visible, uniquement au clavier */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.hero a:focus-visible,
+.page-hero a:focus-visible,
+.cta-band a:focus-visible,
+.topbar a:focus-visible,
+.site-footer a:focus-visible {
+  outline-color: #fff;
+}
+
+/* Toucher : pas de délai de double-tape, retour visuel maîtrisé */
+a, button, summary, .part-card, .persona-card, .filter-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(200, 16, 46, .15);
+}
+
+/* La galerie ne fait plus défiler la page derrière elle */
+.lightbox {
+  overscroll-behavior: contain;
+}
+
+/* Titres : pas de mot isolé en fin de ligne */
+h1, h2, h3,
+.section-head h2,
+.cta-band h2 {
+  text-wrap: balance;
+}
+.hero p.lead, .page-hero p, .section-head p {
+  text-wrap: pretty;
+}
+
+/* Chiffres alignés en colonne */
+.stat-num, .part-tags .tag, .legal-grid dd {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Textes longs : jamais de débordement */
+.card p, .part-body p, .project-body p, .faq .faq-body, .legal-grid dd {
+  overflow-wrap: break-word;
+}
+
+/* Encoches et barres système sur mobile */
+.wa-float {
+  inset-block-end: calc(22px + env(safe-area-inset-bottom));
+  inset-inline-end: calc(22px + env(safe-area-inset-right));
+}
+[dir="rtl"] .wa-float {
+  inset-inline-start: calc(22px + env(safe-area-inset-left));
+  inset-inline-end: auto;
+}
+.site-footer {
+  padding-block-end: env(safe-area-inset-bottom);
+}
+
+/* Les listes déroulantes restent lisibles en thème sombre Windows */
+.form-field select {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* Le message de confirmation est annoncé aux lecteurs d'écran */
+.form-success[aria-live] { scroll-margin-top: 90px; }
+
+/* Ancres de titres non masquées par l'en-tête collant */
+[id] { scroll-margin-top: 92px; }

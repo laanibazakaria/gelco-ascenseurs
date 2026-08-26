@@ -152,6 +152,7 @@
   <!-- /SEO GELCO -->
 </head>
 <body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
 
   <div class="topbar">
     <div class="container topbar-inner">
@@ -168,7 +169,7 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="index.html">
-        <img class="brand-logo" src="assets/img/logo-gelco.jpg" alt="GELCO — Grand Elevators Company">
+        <img class="brand-logo" fetchpriority="high" decoding="async" src="assets/img/logo-gelco.jpg" alt="GELCO — Grand Elevators Company" width="680" height="239">
       </a>
       <nav class="main-nav" id="mainNav">
         <a href="index.html">Accueil</a>
@@ -185,7 +186,7 @@
     </div>
   </header>
 
-  <section class="page-hero">
+  <section id="contenu" class="page-hero">
     <div class="container">
       <div class="breadcrumb"><a href="index.html">Accueil</a> / Contact</div>
       <h1>Contact &amp; devis gratuit</h1>
@@ -208,7 +209,7 @@
           <div class="form-grid">
             <div class="form-field">
               <label for="qType">Type de demande *</label>
-              <select id="qType" required>
+              <select id="qType" autocomplete="off" required>
                 <option value="" disabled selected>Choisir…</option>
                 <option>Installation d'ascenseur / monte-charge</option>
                 <option>Pièce détachée</option>
@@ -221,7 +222,7 @@
             </div>
             <div class="form-field">
               <label for="qBrand">Marque de l'ascenseur</label>
-              <select id="qBrand">
+              <select id="qBrand" autocomplete="off">
                 <option value="" selected>Je ne sais pas</option>
                 <option>Otis</option>
                 <option>Schindler</option>
@@ -234,7 +235,7 @@
             </div>
             <div class="form-field">
               <label for="qBuilding">Type de bâtiment *</label>
-              <select id="qBuilding" required>
+              <select id="qBuilding" autocomplete="off" required>
                 <option value="" disabled selected>Choisir…</option>
                 <option>Immeuble résidentiel</option>
                 <option>Immeuble de bureaux</option>
@@ -246,11 +247,11 @@
             </div>
             <div class="form-field">
               <label for="qFloors">Nombre de niveaux</label>
-              <input type="number" id="qFloors" min="2" max="60" placeholder="Ex. 8">
+              <input type="number" id="qFloors" inputmode="numeric" min="2" max="60" placeholder="Ex. 8">
             </div>
             <div class="form-field">
               <label for="qCity">Ville *</label>
-              <select id="qCity" required>
+              <select id="qCity" autocomplete="off" required>
                 <option value="" disabled selected>Choisir…</option>
                 <option>Agadir</option>
                 <option>Inezgane</option>
@@ -263,15 +264,15 @@
             </div>
             <div class="form-field">
               <label for="qName">Votre nom *</label>
-              <input type="text" id="qName" required placeholder="Nom et prénom">
+              <input type="text" id="qName" autocomplete="name" required placeholder="Nom et prénom">
             </div>
             <div class="form-field">
               <label for="qPhone">Votre téléphone *</label>
-              <input type="tel" id="qPhone" required placeholder="+212 6 …">
+              <input type="tel" id="qPhone" autocomplete="tel" inputmode="tel" required placeholder="+212 6 …">
             </div>
             <div class="form-field">
               <label for="qEmail">Votre e-mail</label>
-              <input type="email" id="qEmail" placeholder="nom@societe.ma" autocomplete="email">
+              <input type="email" id="qEmail" spellcheck="false" placeholder="nom@societe.ma" autocomplete="email">
             </div>
             <div class="form-field full">
               <label for="qMessage">Détails (référence de pièce, description de la panne…)</label>
@@ -283,7 +284,7 @@
             <button type="submit" class="btn btn-ghost" data-canal="email" style="width:100%;justify-content:center;">Envoyer par e-mail</button>
           </div>
           <p class="form-help">Choisissez le canal qui vous arrange : les deux nous parviennent directement.</p>
-          <div class="form-success" id="formSuccess"></div>
+          <div class="form-success" id="formSuccess" role="status" aria-live="polite"></div>
           <p class="form-note">* Champs obligatoires. Vos informations servent uniquement à composer votre message et à vous répondre — <a href="mentions-legales.html">en savoir plus</a>.</p>
         </form>
       </div>
@@ -323,7 +324,7 @@
         </div>
 
         <div class="card" style="padding:0;overflow:hidden;">
-          <img src="assets/img/devanture-gelco.jpg" alt="Local GELCO à Dcheira El Jihadia" style="width:100%;display:block;">
+          <img src="assets/img/devanture-gelco.jpg" alt="Local GELCO à Dcheira El Jihadia" style="width:100%;display:block;" width="963" height="1280">
           <p style="color:var(--muted);font-size:13.5px;padding:12px 16px;">Notre local à Dcheira El Jihadia — passez nous voir !</p>
         </div>
 
@@ -344,7 +345,7 @@
   <footer class="site-footer">
     <div class="container footer-grid">
       <div class="footer-brand">
-        <span class="brand-text">GELCO<small>Ascenseurs</small></span>
+        <span class="brand-text" translate="no">GELCO<small>Ascenseurs</small></span>
         <p>Fournisseur indépendant de pièces détachées d'ascenseurs toutes marques et spécialiste de l'installation de capteurs de niveau étage par étage au Maroc.</p>
       </div>
       <div>

@@ -152,6 +152,7 @@
   <!-- /SEO GELCO -->
 </head>
 <body>
+  <a class="skip-link" href="#contenu">تخطي إلى المحتوى</a>
 
   <div class="topbar">
     <div class="container topbar-inner">
@@ -168,7 +169,7 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="index.html">
-        <img class="brand-logo" src="../assets/img/logo-gelco.jpg" alt="جيلكو — Grand Elevators Company">
+        <img class="brand-logo" fetchpriority="high" decoding="async" src="../assets/img/logo-gelco.jpg" alt="جيلكو — Grand Elevators Company" width="680" height="239">
       </a>
       <nav class="main-nav" id="mainNav">
         <a href="index.html">الرئيسية</a>
@@ -185,7 +186,7 @@
     </div>
   </header>
 
-  <section class="page-hero">
+  <section id="contenu" class="page-hero">
     <div class="container">
       <div class="breadcrumb"><a href="index.html">الرئيسية</a> / اتصلوا بنا</div>
       <h1>اتصلوا بنا — عرض سعر مجاني</h1>
@@ -208,7 +209,7 @@
           <div class="form-grid">
             <div class="form-field">
               <label for="qType">نوع الطلب *</label>
-              <select id="qType" required>
+              <select id="qType" autocomplete="off" required>
                 <option value="" disabled selected>اختر…</option>
                 <option>تركيب مصعد / رافعة بضائع</option>
                 <option>قطعة غيار</option>
@@ -221,7 +222,7 @@
             </div>
             <div class="form-field">
               <label for="qBrand">ماركة المصعد</label>
-              <select id="qBrand">
+              <select id="qBrand" autocomplete="off">
                 <option value="" selected>لا أعرف</option>
                 <option>Otis</option>
                 <option>Schindler</option>
@@ -234,7 +235,7 @@
             </div>
             <div class="form-field">
               <label for="qBuilding">نوع المبنى *</label>
-              <select id="qBuilding" required>
+              <select id="qBuilding" autocomplete="off" required>
                 <option value="" disabled selected>اختر…</option>
                 <option>عمارة سكنية</option>
                 <option>عمارة مكاتب</option>
@@ -246,11 +247,11 @@
             </div>
             <div class="form-field">
               <label for="qFloors">عدد الطوابق</label>
-              <input type="number" id="qFloors" min="2" max="60" placeholder="مثلاً: 8">
+              <input type="number" id="qFloors" inputmode="numeric" min="2" max="60" placeholder="مثلاً: 8">
             </div>
             <div class="form-field">
               <label for="qCity">المدينة *</label>
-              <select id="qCity" required>
+              <select id="qCity" autocomplete="off" required>
                 <option value="" disabled selected>اختر…</option>
                 <option>أكادير</option>
                 <option>إنزكان</option>
@@ -263,15 +264,15 @@
             </div>
             <div class="form-field">
               <label for="qName">الاسم الكامل *</label>
-              <input type="text" id="qName" required placeholder="الاسم واللقب">
+              <input type="text" id="qName" autocomplete="name" required placeholder="الاسم واللقب">
             </div>
             <div class="form-field">
               <label for="qPhone">رقم الهاتف *</label>
-              <input type="tel" id="qPhone" required placeholder="+212 6 …" dir="ltr" style="text-align:right;">
+              <input type="tel" id="qPhone" autocomplete="tel" inputmode="tel" required placeholder="+212 6 …" dir="ltr" style="text-align:right;">
             </div>
             <div class="form-field">
               <label for="qEmail">بريدكم الإلكتروني</label>
-              <input type="email" id="qEmail" placeholder="nom@societe.ma" dir="ltr" style="text-align:right;" autocomplete="email">
+              <input type="email" id="qEmail" spellcheck="false" placeholder="nom@societe.ma" dir="ltr" style="text-align:right;" autocomplete="email">
             </div>
             <div class="form-field full">
               <label for="qMessage">تفاصيل (مرجع القطعة، وصف العطل…)</label>
@@ -283,7 +284,7 @@
             <button type="submit" class="btn btn-ghost" data-canal="email" style="width:100%;justify-content:center;">الإرسال عبر البريد الإلكتروني</button>
           </div>
           <p class="form-help">اختاروا الوسيلة التي تناسبكم: كلاهما يصلنا مباشرة.</p>
-          <div class="form-success" id="formSuccess"></div>
+          <div class="form-success" id="formSuccess" role="status" aria-live="polite"></div>
           <p class="form-note">* حقول إجبارية. تُستعمل معلوماتكم فقط لتكوين رسالتكم والرد عليكم — <a href="mentions-legales.html">المزيد من التفاصيل</a>.</p>
         </form>
       </div>
@@ -323,7 +324,7 @@
         </div>
 
         <div class="card" style="padding:0;overflow:hidden;">
-          <img src="../assets/img/devanture-gelco.jpg" alt="محل جيلكو في الدشيرة الجهادية" style="width:100%;display:block;">
+          <img src="../assets/img/devanture-gelco.jpg" alt="محل جيلكو في الدشيرة الجهادية" style="width:100%;display:block;" width="963" height="1280">
           <p style="color:var(--muted);font-size:13.5px;padding:12px 16px;">محلنا في الدشيرة الجهادية — تفضلوا بزيارتنا!</p>
         </div>
 
@@ -344,7 +345,7 @@
   <footer class="site-footer">
     <div class="container footer-grid">
       <div class="footer-brand">
-        <span class="brand-text">GELCO<small>للمصاعد</small></span>
+        <span class="brand-text" translate="no">GELCO<small>للمصاعد</small></span>
         <p>مورد مستقل لقطع غيار المصاعد لجميع الماركات، ومتخصص في تركيب حساسات التسوية طابقاً بطابق في المغرب.</p>
       </div>
       <div>

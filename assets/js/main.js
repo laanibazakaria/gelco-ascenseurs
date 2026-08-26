@@ -168,13 +168,16 @@ if (galleryCards.length) {
   const prefix = isAr ? '../assets/img/' : 'assets/img/';
   const lb = document.createElement('div');
   lb.className = 'lightbox';
+  lb.setAttribute('role', 'dialog');
+  lb.setAttribute('aria-modal', 'true');
+  lb.setAttribute('aria-label', isAr ? 'معرض صور القطعة' : 'Galerie photos de la pièce');
   lb.innerHTML =
     '<div class="lb-box">' +
-    '<button class="lb-close" aria-label="Fermer">✕</button>' +
+    '<button class="lb-close" aria-label="' + (isAr ? 'إغلاق' : 'Fermer') + '">✕</button>' +
     '<div class="lb-main">' +
     '<img id="lbImg" alt="">' +
-    '<button class="lb-arrow lb-prev">‹</button>' +
-    '<button class="lb-arrow lb-next">›</button>' +
+    '<button class="lb-arrow lb-prev" aria-label="' + (isAr ? 'الصورة السابقة' : 'Photo précédente') + '">‹</button>' +
+    '<button class="lb-arrow lb-next" aria-label="' + (isAr ? 'الصورة التالية' : 'Photo suivante') + '">›</button>' +
     '</div>' +
     '<div class="lb-thumbs" id="lbThumbs"></div>' +
     '<div class="lb-body"><h3 id="lbTitle"></h3><p id="lbDesc"></p>' +
@@ -184,7 +187,7 @@ if (galleryCards.length) {
 
   const lbImg = lb.querySelector('#lbImg');
   const lbThumbs = lb.querySelector('#lbThumbs');
-  let imgs = [], idx = 0;
+  let imgs = [], idx = 0, declencheur = null;
 
   const show = i => {
     idx = (i + imgs.length) % imgs.length;
@@ -193,6 +196,11 @@ if (galleryCards.length) {
   };
 
   galleryCards.forEach(card => {
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+    });
     card.addEventListener('click', () => {
       imgs = card.dataset.imgs.split(',');
       lb.querySelector('#lbTitle').textContent = card.querySelector('h3').textContent;
@@ -208,10 +216,16 @@ if (galleryCards.length) {
       show(0);
       lb.classList.add('open');
       document.body.style.overflow = 'hidden';
+      declencheur = card;
+      lb.querySelector('.lb-close').focus();
     });
   });
 
-  const close = () => { lb.classList.remove('open'); document.body.style.overflow = ''; };
+  const close = () => {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+    if (declencheur) { declencheur.focus(); declencheur = null; }
+  };
   lb.querySelector('.lb-close').addEventListener('click', close);
   lb.addEventListener('click', e => { if (e.target === lb) close(); });
   lb.querySelector('.lb-prev').addEventListener('click', () => show(idx - 1));
