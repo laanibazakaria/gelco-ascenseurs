@@ -58,7 +58,9 @@
   --alert-line:#E4B3B3;
 
   /* Couleurs de service, hors palette de marque */
-  --green-wa: #25D366;   /* imposée par WhatsApp */
+  --green-wa: #25D366;      /* imposée par WhatsApp — fond uniquement */
+  --green-wa-dark: #0F7A4A; /* le même vert assombri : le clair ne tient pas
+                               le contraste en texte ou en icône sur blanc */
   --gold:     #F1A33C;   /* étoiles des avis Google */
 
   /* ---------------------------------------------------------------
@@ -911,9 +913,11 @@ a { color: var(--navy); text-decoration: none; }
 .rond-appel { color: var(--navy-600); }
 .rond-appel:hover  { background: var(--navy-600); border-color: var(--navy-600); color: #fff; }
 .rond-appel:active { background: var(--navy-700); border-color: var(--navy-700); }
-.rond-wa { color: var(--green-wa); }
-.rond-wa:hover  { background: var(--green-wa); border-color: var(--green-wa); color: #fff; }
-.rond-wa:active { filter: brightness(.92); }
+/* Vert assombri au repos : l'icône est un élément d'interface, elle doit
+   tenir 3:1 sur le blanc — le vert clair n'atteint que 1,98. */
+.rond-wa { color: var(--green-wa-dark); }
+.rond-wa:hover  { background: var(--green-wa); border-color: var(--green-wa); color: var(--navy-900); }
+.rond-wa:active { background: #1FB855; border-color: #1FB855; color: var(--navy-900); }
 
 /* ---------- Choix du destinataire WhatsApp ----------
    Trois boutons de poids égal : aucun des trois responsables n'est
@@ -935,19 +939,35 @@ a { color: var(--navy); text-decoration: none; }
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
+/* Texte bleu nuit, et non blanc : le vert WhatsApp est trop clair pour du
+   blanc — le contraste tomberait à 1,98, très en dessous du seuil de 4,5.
+   En bleu nuit il monte à 9,6, et le vert de marque reste reconnaissable. */
 .btn-wa {
   background: var(--green-wa);
-  color: #fff;
+  color: var(--navy-900);
   justify-content: center;
   padding: 13px 10px;
   gap: 7px;
 }
-.btn-wa:hover  { background: #1FB855; color: #fff; }
-.btn-wa:active { background: #189947; color: #fff; }
+.btn-wa:hover  { background: #1FB855; color: var(--navy-900); }
+.btn-wa:active { background: #189947; color: var(--navy-900); }
 
 @media (max-width: 420px) {
   /* Sous 420 px, trois colonnes couperaient les prénoms */
   .choix-wa { grid-template-columns: 1fr; }
+}
+
+/* Les trois responsables dans la bande d'appel de l'accueil.
+   Bornée en largeur pour que les boutons ne s'étirent pas sur grand écran. */
+.cta-wa-invite {
+  color: var(--navy-200);
+  font-size: var(--t-300);
+  font-weight: 600;
+  margin: 26px 0 12px;
+}
+.choix-wa-band {
+  max-width: 520px;
+  margin: 0 auto;
 }
 
 /* ---------- Version arabe (RTL) ---------- */
