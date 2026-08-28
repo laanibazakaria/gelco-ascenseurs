@@ -10,10 +10,10 @@
      --------------------------------------------------------------- */
   --navy-50:  #F4F7FA;   /* fond de section alternée */
   --navy-100: #E9F0F6;   /* fond doux, vignettes */
-  --navy-200: var(--navy-200);   /* texte courant sur fond sombre */
+  --navy-200: #D5E2EC;   /* texte courant sur fond sombre */
   --navy-300: #B9CBD8;   /* texte secondaire sur fond sombre */
   --navy-400: #8FA6B7;   /* texte tertiaire sur fond sombre */
-  --navy-500: var(--navy-500);   /* point clair des dégradés */
+  --navy-500: #0E5385;   /* point clair des dégradés */
   --navy-600: #0A3D62;   /* BLEU DE MARQUE */
   --navy-700: #062A47;   /* survol, dégradés */
   --navy-800: #041E33;   /* pied de page, barre du haut */
