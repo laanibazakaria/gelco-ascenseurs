@@ -194,14 +194,24 @@ WhatsApp fonctionne quand même. C'est voulu.
 
 **Réglages dans Vercel** (Settings → Environment Variables, puis redéployer) :
 
-| Variable | Valeur |
-|---|---|
-| `BREVO_API_KEY` | clé d'API Brevo (gratuit, 300 envois/jour) |
-| `DEVIS_DESTINATAIRES` | `Ayoub Laaniba <…>, Said Morchid <…>, Mohamed Kidad <…>` |
-| `DEVIS_EXPEDITEUR` | adresse vérifiée dans Brevo (défaut : le Gmail GELCO) |
+| Variable | Obligatoire | Valeur |
+|---|---|---|
+| `BREVO_API_KEY` | **oui** | clé d'API Brevo (gratuit, 300 envois/jour) |
+| `DEVIS_DESTINATAIRES` | non | `Ayoub Laaniba <…>, Said Morchid <…>, Mohamed Kidad <…>` |
+| `DEVIS_EXPEDITEUR` | non | adresse vérifiée dans Brevo |
 
-Sans ces variables la fonction répond `503 non configure` — le visiteur ne voit
-rien, WhatsApp part quand même.
+Une seule variable est réellement requise. Tant que les trois responsables
+n'ont pas d'adresse propre, la demande part sur `grand.elevators.company@gmail.com`,
+que tous les trois consultent. Le jour où ils en ont une chacun, il suffit de
+renseigner `DEVIS_DESTINATAIRES` : rien à changer dans le code.
+
+Sans la clé, la fonction répond `503 non configure` — le visiteur ne voit rien,
+WhatsApp part quand même.
+
+Les trois responsables figurent aussi, nommés, sur la page contact
+(bloc `.responsables`) : appel et WhatsApp directs pour chacun. Leurs noms y
+sont en caractères latins, y compris sur la version arabe — ne pas inventer
+d'orthographe arabe pour des noms de personnes réelles.
 
 Essais hors ligne, sans rien envoyer (l'appel réseau est intercepté) :
 

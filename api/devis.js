@@ -214,16 +214,20 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ ok: false, erreur: 'nom et telephone requis' });
   }
 
-  const destinataires = listeDestinataires(process.env.DEVIS_DESTINATAIRES);
+  // Tant que les trois responsables n'ont pas d'adresse propre, la demande
+  // part sur la boîte de l'entreprise, que tous les trois consultent.
+  // Le jour où ils ont chacun la leur, il suffit de renseigner
+  // DEVIS_DESTINATAIRES dans Vercel : rien d'autre à changer ici.
+  const destinataires = listeDestinataires(
+    process.env.DEVIS_DESTINATAIRES || EXPEDITEUR_PAR_DEFAUT
+  );
   const cle = process.env.BREVO_API_KEY;
 
   // Tant que la configuration n'est pas faite, on le dit clairement plutôt
   // que d'échouer en silence — le visiteur, lui, est déjà passé par WhatsApp.
-  if (!cle || !destinataires.length) {
+  if (!cle) {
     return res.status(503).json({
-      ok: false,
-      erreur: 'non configure',
-      details: !cle ? 'BREVO_API_KEY manquante' : 'DEVIS_DESTINATAIRES manquante'
+      ok: false, erreur: 'non configure', details: 'BREVO_API_KEY manquante'
     });
   }
 
