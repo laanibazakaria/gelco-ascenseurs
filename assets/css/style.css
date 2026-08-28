@@ -168,25 +168,6 @@ a { color: var(--navy); text-decoration: none; }
 .btn-outline:hover { background: var(--navy-600); color: #fff; }
 .btn-outline:active { background: var(--navy-700); color: #fff; }
 
-/* ---------- Topbar ---------- */
-.topbar {
-  background: var(--navy-deep);
-  color: var(--navy-200);
-  font-size: var(--t-200);
-}
-.topbar-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 36px;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.topbar a { color: #fff; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
-.topbar a .ti { width: 14px; height: 14px; stroke: var(--accent); flex: none; }
-.topbar a:hover { color: var(--accent); }
-.topbar-links { display: flex; gap: 22px; }
-
 /* ---------- Header ---------- */
 .site-header {
   background: #fff;
@@ -847,16 +828,17 @@ a { color: var(--navy); text-decoration: none; }
   .main-nav.open { display: flex; }
   .main-nav a { padding: 13px 10px; border-bottom: 1px solid var(--bg-alt); }
   .nav-toggle { display: block; }
+  /* Le menu se replie : la langue reste accessible d'un seul geste,
+     collée au bouton du menu plutôt que perdue à côté du logo. */
+  .header-inner { gap: 14px; }
+  .lang-switch { margin-inline-start: auto; padding: 7px 13px !important; }
+  .nav-toggle, [dir="rtl"] .nav-toggle { margin-left: 0; margin-right: 0; }
 }
 
 @media (max-width: 600px) {
   .grid-3, .grid-4, .grid-2, .steps { grid-template-columns: 1fr; }
   .form-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
-  .topbar-inner { justify-content: center; padding: 4px 0; }
-  .topbar .topbar-hours { display: none; }
-  .topbar-links { gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .topbar-links a[href^="mailto"] { display: none; }
   .section { padding: 56px 0; }
   .form-card { padding: 26px 20px; }
 }
@@ -889,14 +871,23 @@ a { color: var(--navy); text-decoration: none; }
 [dir="rtl"] .section-head h2,
 [dir="rtl"] .cta-band h2 { line-height: 1.4; }
 
-/* Sélecteur de langue dans la topbar */
+/* Sélecteur de langue — désormais dans l'en-tête clair, à côté du devis.
+   Contour discret au repos, plein au survol : il se lit comme un bouton
+   secondaire, sans concurrencer l'appel à l'action rouge. */
 .lang-switch {
-  border: 1px solid rgba(255,255,255,.35);
-  border-radius: 999px;
-  padding: 2px 12px !important;
+  border: 1.5px solid var(--navy-200);
+  border-radius: var(--radius-pill);
+  padding: 8px 16px !important;
   font-size: var(--t-200);
+  font-weight: 700;
+  color: var(--navy-600);
+  background: none;
+  flex: none;
+  white-space: nowrap;
+  transition: background .2s, border-color .2s, color .2s;
 }
-.lang-switch:hover { border-color: var(--accent); }
+.lang-switch:hover  { background: var(--navy-600); border-color: var(--navy-600); color: #fff; }
+.lang-switch:active { background: var(--navy-700); border-color: var(--navy-700); color: #fff; }
 
 
 /* ============================================================
@@ -1183,7 +1174,6 @@ summary:focus-visible,
 .hero a:focus-visible,
 .page-hero a:focus-visible,
 .cta-band a:focus-visible,
-.topbar a:focus-visible,
 .site-footer a:focus-visible {
   outline-color: #fff;
 }
