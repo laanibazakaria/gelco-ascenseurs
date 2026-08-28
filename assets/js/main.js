@@ -89,6 +89,27 @@ if (quoteForm) {
     const parEmail = quoteForm.dataset.canal === 'email';
     quoteForm.dataset.canal = '';
 
+    // La demande part aux trois fondateurs, mise en page, sans rien attendre
+    // du visiteur. On la déclenche AVANT d'ouvrir WhatsApp : l'ouverture d'un
+    // onglet exige le geste de l'utilisateur, qu'une attente ferait perdre.
+    // `keepalive` permet à la requête d'aboutir même si la page se ferme.
+    // Sur un hébergement sans /api (la copie GitHub Pages), l'appel échoue
+    // sans bruit : le visiteur est de toute façon passé par WhatsApp.
+    try {
+      fetch('/api/devis', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        keepalive: true,
+        body: JSON.stringify({
+          langue: isArabic ? 'ar' : 'fr',
+          nom: get('qName'), telephone: get('qPhone'), email: mail,
+          ville: get('qCity'), type: get('qType'), marque: get('qBrand'),
+          batiment: get('qBuilding'), niveaux: get('qFloors'),
+          message: details, societe: get('qSociete')
+        })
+      }).catch(() => {});
+    } catch (e) { /* navigateur trop ancien : sans effet sur l'envoi WhatsApp */ }
+
     if (parEmail) {
       const sujet = isArabic ? 'طلب عرض سعر — جيلكو للمصاعد' : 'Demande de devis — Site GELCO';
       window.location.href = 'mailto:grand.elevators.company@gmail.com'

@@ -177,6 +177,49 @@ imposé par WhatsApp.
 
 ---
 
+## SKILL 6 : le formulaire de devis
+
+Une demande envoyée depuis `contact.html` part par **deux voies en parallèle** :
+
+1. **WhatsApp** — le visiteur envoie lui-même au 06 61 89 60 33 (comme avant) ;
+2. **E-mail** — `api/devis.js`, une fonction serveur Vercel, expédie la même
+   demande mise en page **aux trois responsables**, sans rien attendre du visiteur.
+
+L'appel réseau est déclenché **avant** `window.open` dans `assets/js/main.js` :
+ouvrir un onglet exige le geste de l'utilisateur, qu'une attente ferait perdre.
+`keepalive: true` permet à la requête d'aboutir même si la page se ferme.
+
+Sur la copie GitHub Pages il n'y a pas de `/api` : l'appel échoue sans bruit,
+WhatsApp fonctionne quand même. C'est voulu.
+
+**Réglages dans Vercel** (Settings → Environment Variables, puis redéployer) :
+
+| Variable | Valeur |
+|---|---|
+| `BREVO_API_KEY` | clé d'API Brevo (gratuit, 300 envois/jour) |
+| `DEVIS_DESTINATAIRES` | `Ayoub Laaniba <…>, Said Morchid <…>, Mohamed Kidad <…>` |
+| `DEVIS_EXPEDITEUR` | adresse vérifiée dans Brevo (défaut : le Gmail GELCO) |
+
+Sans ces variables la fonction répond `503 non configure` — le visiteur ne voit
+rien, WhatsApp part quand même.
+
+Essais hors ligne, sans rien envoyer (l'appel réseau est intercepté) :
+
+```bash
+node --check "C:\Users\laani\Desktop\GELCO\api\devis.js"
+```
+
+Le jeu d'essais couvre : absence de configuration, les trois destinataires,
+la réponse dirigée vers le client, le format international des numéros, la
+version arabe en RTL, le piège à robots, les champs vides, la méthode GET,
+l'injection de balises, la troncature des messages trop longs, le refus de
+Brevo et la panne réseau.
+
+**Règle** : ne jamais mettre de clé d'API dans le dépôt. Elle vit uniquement
+dans les variables d'environnement Vercel.
+
+---
+
 ## Points de vigilance permanents
 
 | Sujet | Règle |
