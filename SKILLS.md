@@ -210,7 +210,41 @@ soit configurée ; si aucune ne l'est, la fonction répond `503`.
 | `DEVIS_SMS` | `0661896033,0661214264,0661939541` — **active le SMS, qui est payant** |
 | `DEVIS_SMS_EXPEDITEUR` | nom affiché, 11 caractères max (défaut `GELCO`) |
 
-### WhatsApp : gratuit, mais non officiel
+### La solution retenue : le visiteur choisit son destinataire
+
+**En service, sans rien à configurer.** Sous le formulaire, trois boutons
+verts nommés — Ayoub, Said, Mohamed. Le visiteur en touche un, WhatsApp
+s'ouvre sur **le numéro de cette personne** avec le message pré-rempli.
+Le message est identique quel que soit le bouton.
+
+Gratuit, officiel, immédiat, sans service tiers, sans donnée client qui
+sorte du parcours. C'est la seule combinaison de ces quatre propriétés.
+
+Le numéro est porté par l'attribut `data-numero` du bouton ; `main.js` le
+recopie dans `quoteForm.dataset.numero` au clic, et retombe sur le
+06 61 89 60 33 si l'attribut manque.
+
+**Piège** : ne cibler que `quoteForm.querySelectorAll('button[data-canal]')`.
+Après le premier clic, le `<form>` porte lui-même `data-canal` et un
+sélecteur global le ramasserait avant les boutons — c'est ce qui a fait
+croire un temps que le formulaire ne s'envoyait plus.
+
+Les trois boutons ont le même poids visuel : aucun responsable n'est
+présenté comme le bon interlocuteur par défaut. Sous 420 px ils s'empilent,
+sinon ils tiennent sur une ligne.
+
+**Ce qui a été écarté, et pourquoi** — utile si la question revient :
+
+| Voie | Écartée parce que |
+|---|---|
+| Message automatique aux 3 sur WhatsApp | WhatsApp l'interdit depuis un lien. Seule l'API officielle le permet : payante et compte Meta Business vérifié. |
+| CallMeBot | Non officiel, sans réponse à l'activation, tarif gratuit annoncé « personal use only ». |
+| Un numéro sur trois téléphones (appareils liés) | Techniquement valable, mais la direction veut un message **à chacun sur son propre numéro**, pas un compte partagé. |
+
+Les sections qui suivent décrivent des voies supplémentaires, toutes
+facultatives et toutes inactives par défaut.
+
+### WhatsApp automatique : gratuit, mais non officiel
 
 CallMeBot est un pont **non officiel** vers WhatsApp. Deux conséquences :
 

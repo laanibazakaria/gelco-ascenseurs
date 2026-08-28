@@ -116,7 +116,10 @@ if (quoteForm) {
         + '?subject=' + encodeURIComponent(sujet)
         + '&body=' + encodeURIComponent(corps);
     } else {
-      window.open('https://wa.me/212661896033?text=' + encodeURIComponent(corps), '_blank');
+      // Le bouton cliqué porte le numéro du responsable choisi par le visiteur.
+      // Repli sur le numéro principal si l'attribut venait à manquer.
+      const numero = quoteForm.dataset.numero || '212661896033';
+      window.open('https://wa.me/' + numero + '?text=' + encodeURIComponent(corps), '_blank');
     }
 
     const success = document.getElementById('formSuccess');
@@ -132,9 +135,14 @@ if (quoteForm) {
     }
   });
 
-  // Mémorise le canal choisi avant la validation
-  document.querySelectorAll('[data-canal]').forEach(btn => {
-    btn.addEventListener('click', () => { quoteForm.dataset.canal = btn.dataset.canal; });
+  // Mémorise le canal et le destinataire choisis avant la validation.
+  // On ne vise que les boutons : le formulaire lui-même porte data-canal
+  // une fois le premier clic passé, et se sélectionnerait sinon.
+  quoteForm.querySelectorAll('button[data-canal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      quoteForm.dataset.canal = btn.dataset.canal;
+      quoteForm.dataset.numero = btn.dataset.numero || '';
+    });
   });
 }
 

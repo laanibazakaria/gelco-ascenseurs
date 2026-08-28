@@ -915,6 +915,41 @@ a { color: var(--navy); text-decoration: none; }
 .rond-wa:hover  { background: var(--green-wa); border-color: var(--green-wa); color: #fff; }
 .rond-wa:active { filter: brightness(.92); }
 
+/* ---------- Choix du destinataire WhatsApp ----------
+   Trois boutons de poids égal : aucun des trois responsables n'est
+   présenté comme le bon interlocuteur par défaut. Ils passent sur une
+   seule ligne dès qu'il y a la place, et s'empilent sinon. */
+.form-invite {
+  font-size: var(--t-300);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.form-sousinvite {
+  font-size: var(--t-200);
+  color: var(--muted);
+  margin-top: 9px;
+}
+.choix-wa {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.btn-wa {
+  background: var(--green-wa);
+  color: #fff;
+  justify-content: center;
+  padding: 13px 10px;
+  gap: 7px;
+}
+.btn-wa:hover  { background: #1FB855; color: #fff; }
+.btn-wa:active { background: #189947; color: #fff; }
+
+@media (max-width: 420px) {
+  /* Sous 420 px, trois colonnes couperaient les prénoms */
+  .choix-wa { grid-template-columns: 1fr; }
+}
+
 /* ---------- Version arabe (RTL) ---------- */
 [dir="rtl"] body,
 [dir="rtl"] input,
