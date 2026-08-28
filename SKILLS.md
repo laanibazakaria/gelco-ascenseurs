@@ -219,9 +219,21 @@ CallMeBot est un pont **non officiel** vers WhatsApp. Deux conséquences :
 - le nom, le numéro et le message du client **transitent par ses serveurs**,
   ce qui est déclaré dans les mentions légales, dans les deux langues.
 
-Chaque responsable l'autorise **une fois**, depuis son propre WhatsApp, en
-écrivant `I allow callmebot to send me messages` au **+34 621 331 709**.
-Il reçoit en retour une clé personnelle à reporter dans `DEVIS_WHATSAPP`.
+Chaque responsable l'autorise **une fois**, depuis son propre WhatsApp :
+enregistrer le contact **+34 623 76 13 63**, puis lui écrire exactement
+`I allow callmebot to send me messages`. La réponse contenant la clé arrive
+sous 2 minutes ; si rien n'arrive, CallMeBot demande d'attendre 24 h avant de
+réessayer.
+
+**Ce numéro change au fil des années.** Le vérifier sur
+`callmebot.com/blog/free-api-whatsapp-messages/` plutôt que de le recopier
+de mémoire — c'est exactement l'erreur qui a fait perdre du temps la
+première fois.
+
+**Le tarif gratuit est annoncé « personal use only ».** L'employer pour les
+alertes d'une entreprise est une zone grise : CallMeBot peut couper le
+service sans préavis. Raison de plus pour que son échec ne bloque jamais les
+autres voies.
 
 **Piège** : CallMeBot répond `200` même quand il échoue (clé invalide,
 autorisation expirée). Un code 200 ne suffit pas — la fonction lit le corps

@@ -318,7 +318,8 @@ async function envoyerCourriel(cle, destinataires, d) {
  *     est signalé dans les mentions légales du site.
  *
  * Chaque responsable doit l'autoriser une fois, depuis son WhatsApp, en
- * écrivant « I allow callmebot to send me messages » au +34 621 331 709.
+ * écrivant « I allow callmebot to send me messages » au +34 623 76 13 63
+ * (numéro à vérifier sur callmebot.com : il change au fil des années).
  * Il reçoit en retour une clé personnelle, à reporter dans DEVIS_WHATSAPP
  * au format  numero:cle,numero:cle,numero:cle
  * ------------------------------------------------------------------ */
