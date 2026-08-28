@@ -189,6 +189,86 @@ function courriel(d) {
 }
 
 /* ------------------------------------------------------------------ *
+ * Alerte SMS aux trois responsables
+ *
+ * Un SMS coûte de l'argent à chaque envoi : trois numéros, c'est trois
+ * fois le prix par demande. Deux précautions en découlent.
+ *
+ * 1. L'ENCODAGE. Un SMS tient en 160 caractères tant qu'il reste dans
+ *    l'alphabet GSM. Un seul caractère hors de cet alphabet — un « â »,
+ *    une lettre arabe — le fait basculer en UCS-2, où la limite tombe à
+ *    70 caractères : le même message est alors facturé deux ou trois
+ *    fois. On ramène donc tout à l'ASCII, sans exception.
+ * 2. L'ACTIVATION. Sans la variable DEVIS_SMS, aucun SMS n'est envoyé.
+ *    Le service ne se met à coûter que le jour où on le décide.
+ * ------------------------------------------------------------------ */
+
+const ACCENTS = { 'à':'a','á':'a','â':'a','ä':'a','ã':'a','å':'a','ç':'c','è':'e','é':'e',
+  'ê':'e','ë':'e','ì':'i','í':'i','î':'i','ï':'i','ñ':'n','ò':'o','ó':'o','ô':'o','ö':'o',
+  'õ':'o','ø':'o','ù':'u','ú':'u','û':'u','ü':'u','ý':'y','ÿ':'y','œ':'oe','æ':'ae' };
+
+// Tout ce qui n'est pas ASCII imprimable sort : c'est le prix d'un SMS unique
+function versAscii(texte) {
+  return String(texte || '')
+    .replace(/[’‘]/g, "'").replace(/[“”]/g, '"')
+    .replace(/[–—]/g, '-').replace(/[·•]/g, '-').replace(/ /g, ' ')
+    .split('').map(c => ACCENTS[c] || ACCENTS[c.toLowerCase()] && ACCENTS[c.toLowerCase()].toUpperCase() || c).join('')
+    .replace(/[^\x20-\x7E]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function texteSms(d) {
+  const nom = versAscii(d.nom) || 'Client';
+  const lignes = ['GELCO - nouvelle demande', nom, d.telephone];
+  const situation = [versAscii(d.ville), versAscii(d.type)].filter(Boolean).join(' - ');
+  if (situation) lignes.push(situation);
+  // Une demande rédigée en arabe ne se transcrit pas : on le signale,
+  // le détail complet est de toute façon dans le courriel.
+  if (d.langue === 'ar') lignes.push('(demande en arabe)');
+  lignes.push('Ref ' + d.reference);
+
+  let texte = lignes.join('\n');
+  if (texte.length > 160) texte = texte.slice(0, 157) + '...';
+  return texte;
+}
+
+async function envoyerSms(cle, donnees) {
+  const numeros = String(process.env.DEVIS_SMS || '')
+    .split(',').map(n => numeroInternational(n.trim())).filter(n => n.length >= 11);
+
+  if (!numeros.length) return { actif: false };
+
+  const contenu = texteSms(donnees);
+  const expediteur = (process.env.DEVIS_SMS_EXPEDITEUR || 'GELCO').slice(0, 11);
+
+  const envois = await Promise.allSettled(numeros.map(numero =>
+    fetch('https://api.brevo.com/v3/transactionalSMS/sms', {
+      method: 'POST',
+      headers: { 'api-key': cle, 'content-type': 'application/json', 'accept': 'application/json' },
+      body: JSON.stringify({ sender: expediteur, recipient: numero, content: contenu, type: 'transactional' })
+    }).then(async r => {
+      if (!r.ok) throw new Error(r.status + ' ' + (await r.text()).slice(0, 200));
+      return numero;
+    })
+  ));
+
+  const partis = envois.filter(e => e.status === 'fulfilled').length;
+  envois.forEach((e, i) => {
+    if (e.status === 'rejected') console.error('SMS refuse pour', numeros[i], e.reason && e.reason.message);
+  });
+
+  return {
+    actif: true,
+    partis,
+    total: numeros.length,
+    caracteres: contenu.length,
+    // Au-delà de 160 caractères ASCII, l'opérateur facture plusieurs SMS
+    segments: Math.max(1, Math.ceil(contenu.length / 160))
+  };
+}
+
+/* ------------------------------------------------------------------ *
  * La fonction
  * ------------------------------------------------------------------ */
 
@@ -262,6 +342,10 @@ module.exports = async function handler(req, res) {
     envoi.replyTo = { email: donnees.email, name: donnees.nom };
   }
 
+  // Le SMS part en parallèle du courriel : il coûte de l'argent, on ne le
+  // fait donc pas dépendre de la réussite de l'autre, ni l'inverse.
+  const promesseSms = envoyerSms(cle, donnees);
+
   try {
     const reponse = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
@@ -273,19 +357,25 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify(envoi)
     });
 
+    const sms = await promesseSms;
+
     if (!reponse.ok) {
       const texte = await reponse.text();
       console.error('Brevo a refuse l envoi', reponse.status, texte);
-      return res.status(502).json({ ok: false, erreur: 'envoi refuse', statut: reponse.status });
+      return res.status(502).json({ ok: false, erreur: 'envoi refuse', statut: reponse.status, sms });
     }
 
     return res.status(200).json({
       ok: true,
       reference: donnees.reference,
-      destinataires: destinataires.length
+      destinataires: destinataires.length,
+      sms
     });
   } catch (e) {
     console.error('Echec de l appel a Brevo', e);
-    return res.status(502).json({ ok: false, erreur: 'reseau' });
+    // Le SMS a peut-être abouti, lui : on attend son verdict avant de répondre,
+    // sinon la promesse resterait pendante et son échec ne serait jamais traité.
+    const sms = await promesseSms;
+    return res.status(502).json({ ok: false, erreur: 'reseau', sms });
   }
 };

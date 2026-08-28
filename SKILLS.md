@@ -196,9 +196,32 @@ WhatsApp fonctionne quand même. C'est voulu.
 
 | Variable | Obligatoire | Valeur |
 |---|---|---|
-| `BREVO_API_KEY` | **oui** | clé d'API Brevo (gratuit, 300 envois/jour) |
+| `BREVO_API_KEY` | **oui** | clé d'API Brevo (e-mail gratuit, 300 envois/jour) |
 | `DEVIS_DESTINATAIRES` | non | `Ayoub Laaniba <…>, Said Morchid <…>, Mohamed Kidad <…>` |
 | `DEVIS_EXPEDITEUR` | non | adresse vérifiée dans Brevo |
+| `DEVIS_SMS` | non | `0661896033,0661214264,0661939541` — **active le SMS, qui est payant** |
+| `DEVIS_SMS_EXPEDITEUR` | non | nom affiché, 11 caractères max (défaut `GELCO`) |
+
+### Le SMS, et pourquoi il faut y regarder à deux fois
+
+Sans `DEVIS_SMS`, **aucun SMS ne part** : le service ne coûte rien tant qu'on
+ne l'a pas activé. Une fois activé, chaque demande déclenche trois SMS.
+
+Un SMS tient en 160 caractères tant qu'il reste dans l'alphabet GSM. **Un
+seul caractère hors de cet alphabet** — un `â`, une lettre arabe — le bascule
+en UCS-2, où la limite tombe à 70 : le même message est alors facturé deux ou
+trois fois. C'est pourquoi `versAscii()` transcrit tout, sans exception, et
+qu'une demande rédigée en arabe est signalée par la mention
+`(demande en arabe)` plutôt que reprise telle quelle. Le détail complet est
+de toute façon dans le courriel.
+
+Le message type fait **100 caractères** : un seul SMS par destinataire.
+Si on l'allonge, vérifier que `sms.segments` vaut toujours `1` dans la
+réponse de la fonction — sinon la facture double.
+
+Au Maroc, un expéditeur alphanumérique (`GELCO`) doit souvent être enregistré
+auprès des opérateurs. Si Brevo répond `400`, c'est la première piste ; le
+courriel, lui, part quand même.
 
 Une seule variable est réellement requise. Tant que les trois responsables
 n'ont pas d'adresse propre, la demande part sur `grand.elevators.company@gmail.com`,
