@@ -179,11 +179,14 @@ imposé par WhatsApp.
 
 ## SKILL 6 : le formulaire de devis
 
-Une demande envoyée depuis `contact.html` part par **deux voies en parallèle** :
+Une demande envoyée depuis `contact.html` part par **plusieurs voies en parallèle** :
 
-1. **WhatsApp** — le visiteur envoie lui-même au 06 61 89 60 33 (comme avant) ;
-2. **E-mail** — `api/devis.js`, une fonction serveur Vercel, expédie la même
-   demande mise en page **aux trois responsables**, sans rien attendre du visiteur.
+1. **WhatsApp côté client** — le visiteur envoie lui-même au 06 61 89 60 33 ;
+2. **WhatsApp aux trois responsables** — `api/devis.js`, une fonction serveur
+   Vercel, alerte Ayoub, Said et Mohamed via CallMeBot, gratuitement et sans
+   rien attendre du visiteur ;
+3. **E-mail** et **SMS** — mêmes données, voies facultatives, chacune activée
+   par sa propre variable.
 
 L'appel réseau est déclenché **avant** `window.open` dans `assets/js/main.js` :
 ouvrir un onglet exige le geste de l'utilisateur, qu'une attente ferait perdre.
@@ -194,13 +197,36 @@ WhatsApp fonctionne quand même. C'est voulu.
 
 **Réglages dans Vercel** (Settings → Environment Variables, puis redéployer) :
 
-| Variable | Obligatoire | Valeur |
-|---|---|---|
-| `BREVO_API_KEY` | **oui** | clé d'API Brevo (e-mail gratuit, 300 envois/jour) |
-| `DEVIS_DESTINATAIRES` | non | `Ayoub Laaniba <…>, Said Morchid <…>, Mohamed Kidad <…>` |
-| `DEVIS_EXPEDITEUR` | non | adresse vérifiée dans Brevo |
-| `DEVIS_SMS` | non | `0661896033,0661214264,0661939541` — **active le SMS, qui est payant** |
-| `DEVIS_SMS_EXPEDITEUR` | non | nom affiché, 11 caractères max (défaut `GELCO`) |
+Les trois voies sont **indépendantes** : le WhatsApp part sans compte Brevo,
+et le courriel part même si CallMeBot est en panne. Il suffit qu'**une** voie
+soit configurée ; si aucune ne l'est, la fonction répond `503`.
+
+| Variable | Valeur |
+|---|---|
+| `DEVIS_WHATSAPP` | `212661896033:clé,212661214264:clé,212661939541:clé` — **gratuit** |
+| `BREVO_API_KEY` | clé d'API Brevo (e-mail gratuit, 300 envois/jour) |
+| `DEVIS_DESTINATAIRES` | `Ayoub Laaniba <…>, Said Morchid <…>, Mohamed Kidad <…>` |
+| `DEVIS_EXPEDITEUR` | adresse vérifiée dans Brevo |
+| `DEVIS_SMS` | `0661896033,0661214264,0661939541` — **active le SMS, qui est payant** |
+| `DEVIS_SMS_EXPEDITEUR` | nom affiché, 11 caractères max (défaut `GELCO`) |
+
+### WhatsApp : gratuit, mais non officiel
+
+CallMeBot est un pont **non officiel** vers WhatsApp. Deux conséquences :
+
+- il peut cesser de fonctionner sans préavis — son échec ne fait donc jamais
+  échouer les autres voies ;
+- le nom, le numéro et le message du client **transitent par ses serveurs**,
+  ce qui est déclaré dans les mentions légales, dans les deux langues.
+
+Chaque responsable l'autorise **une fois**, depuis son propre WhatsApp, en
+écrivant `I allow callmebot to send me messages` au **+34 621 331 709**.
+Il reçoit en retour une clé personnelle à reporter dans `DEVIS_WHATSAPP`.
+
+**Piège** : CallMeBot répond `200` même quand il échoue (clé invalide,
+autorisation expirée). Un code 200 ne suffit pas — la fonction lit le corps
+de la réponse et cherche `error`, `invalid`, `APIKey`. Ne jamais retirer ce
+contrôle : sans lui, un envoi raté passerait pour un succès.
 
 ### Le SMS, et pourquoi il faut y regarder à deux fois
 

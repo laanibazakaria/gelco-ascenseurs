@@ -237,7 +237,8 @@ async function envoyerSms(cle, donnees) {
   const numeros = String(process.env.DEVIS_SMS || '')
     .split(',').map(n => numeroInternational(n.trim())).filter(n => n.length >= 11);
 
-  if (!numeros.length) return { actif: false };
+  // Le SMS passe par Brevo : sans clé, il ne peut pas partir
+  if (!numeros.length || !cle) return { actif: false, partis: 0, total: 0 };
 
   const contenu = texteSms(donnees);
   const expediteur = (process.env.DEVIS_SMS_EXPEDITEUR || 'GELCO').slice(0, 11);
@@ -265,6 +266,123 @@ async function envoyerSms(cle, donnees) {
     caracteres: contenu.length,
     // Au-delà de 160 caractères ASCII, l'opérateur facture plusieurs SMS
     segments: Math.max(1, Math.ceil(contenu.length / 160))
+  };
+}
+
+/* ------------------------------------------------------------------ *
+ * Le courriel
+ * ------------------------------------------------------------------ */
+
+async function envoyerCourriel(cle, destinataires, d) {
+  if (!cle) return { actif: false, partis: 0, total: 0 };
+
+  const envoi = {
+    sender: { name: 'Site GELCO', email: process.env.DEVIS_EXPEDITEUR || EXPEDITEUR_PAR_DEFAUT },
+    to: destinataires,
+    subject: (d.langue === 'ar' ? 'طلب عرض سعر — ' : 'Demande de devis — ')
+      + d.nom + (d.ville ? ' · ' + d.ville : '') + ' [' + d.reference + ']',
+    htmlContent: courriel(d),
+    tags: ['devis-site']
+  };
+
+  // Répondre au message écrit directement au client, quand il a laissé un e-mail
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) {
+    envoi.replyTo = { email: d.email, name: d.nom };
+  }
+
+  try {
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': cle, 'content-type': 'application/json', 'accept': 'application/json' },
+      body: JSON.stringify(envoi)
+    });
+    if (!r.ok) {
+      console.error('Brevo a refuse le courriel', r.status, (await r.text()).slice(0, 200));
+      return { actif: true, partis: 0, total: destinataires.length, statut: r.status };
+    }
+    return { actif: true, partis: destinataires.length, total: destinataires.length };
+  } catch (e) {
+    console.error('Echec de l appel courriel', e && e.message);
+    return { actif: true, partis: 0, total: destinataires.length, erreur: 'reseau' };
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Alerte WhatsApp aux trois responsables, via CallMeBot
+ *
+ * CallMeBot est un pont gratuit mais NON OFFICIEL vers WhatsApp. Deux
+ * conséquences dont il faut avoir conscience :
+ *   — il peut cesser de fonctionner sans préavis ; c'est pourquoi son
+ *     échec ne fait jamais échouer les autres voies ;
+ *   — le nom et le numéro du client transitent par ses serveurs, ce qui
+ *     est signalé dans les mentions légales du site.
+ *
+ * Chaque responsable doit l'autoriser une fois, depuis son WhatsApp, en
+ * écrivant « I allow callmebot to send me messages » au +34 621 331 709.
+ * Il reçoit en retour une clé personnelle, à reporter dans DEVIS_WHATSAPP
+ * au format  numero:cle,numero:cle,numero:cle
+ * ------------------------------------------------------------------ */
+
+function texteWhatsapp(d) {
+  const l = [];
+  l.push('*GELCO — nouvelle demande*');
+  l.push('');
+  l.push('*Client :* ' + d.nom);
+  l.push('*Téléphone :* ' + d.telephone);
+  if (d.ville)    l.push('*Ville :* ' + d.ville);
+  if (d.type)     l.push('*Demande :* ' + d.type);
+  if (d.marque)   l.push('*Marque :* ' + d.marque);
+  if (d.batiment) l.push('*Bâtiment :* ' + d.batiment + (d.niveaux ? ' — ' + d.niveaux + ' niveaux' : ''));
+  if (d.email)    l.push('*E-mail :* ' + d.email);
+  if (d.message) {
+    l.push('');
+    // CallMeBot passe le message dans l'adresse : on le borne pour ne pas
+    // dépasser la longueur qu'un serveur accepte.
+    l.push('_' + (d.message.length > 600 ? d.message.slice(0, 597) + '…' : d.message) + '_');
+  }
+  l.push('');
+  l.push('Rappeler : wa.me/' + numeroInternational(d.telephone));
+  l.push('Réf. ' + d.reference);
+  return l.join('\n');
+}
+
+async function envoyerWhatsapp(d) {
+  // Format attendu :  212661896033:1234567,212661214264:2345678
+  const comptes = String(process.env.DEVIS_WHATSAPP || '')
+    .split(',')
+    .map(part => {
+      const [numero, cle] = part.split(':').map(x => (x || '').trim());
+      return { numero: numeroInternational(numero), cle };
+    })
+    .filter(c => c.numero.length >= 11 && c.cle);
+
+  if (!comptes.length) return { actif: false, partis: 0, total: 0 };
+
+  const texte = encodeURIComponent(texteWhatsapp(d));
+
+  const envois = await Promise.allSettled(comptes.map(c => {
+    const url = 'https://api.callmebot.com/whatsapp.php?phone=' + c.numero
+      + '&apikey=' + encodeURIComponent(c.cle) + '&text=' + texte;
+    return fetch(url, { method: 'GET' }).then(async r => {
+      const corps = (await r.text()).slice(0, 300);
+      // CallMeBot répond 200 même sur erreur : il faut lire la réponse
+      if (!r.ok || /error|invalid|not.*allowed|APIKey/i.test(corps)) {
+        throw new Error(r.status + ' ' + corps.replace(/<[^>]*>/g, ' ').trim().slice(0, 160));
+      }
+      return c.numero;
+    });
+  }));
+
+  envois.forEach((e, i) => {
+    if (e.status === 'rejected') {
+      console.error('WhatsApp refuse pour', comptes[i].numero, e.reason && e.reason.message);
+    }
+  });
+
+  return {
+    actif: true,
+    partis: envois.filter(e => e.status === 'fulfilled').length,
+    total: comptes.length
   };
 }
 
@@ -303,14 +421,6 @@ module.exports = async function handler(req, res) {
   );
   const cle = process.env.BREVO_API_KEY;
 
-  // Tant que la configuration n'est pas faite, on le dit clairement plutôt
-  // que d'échouer en silence — le visiteur, lui, est déjà passé par WhatsApp.
-  if (!cle) {
-    return res.status(503).json({
-      ok: false, erreur: 'non configure', details: 'BREVO_API_KEY manquante'
-    });
-  }
-
   const donnees = {
     langue: corps.langue === 'ar' ? 'ar' : 'fr',
     nom, telephone,
@@ -325,57 +435,31 @@ module.exports = async function handler(req, res) {
     reference: reference()
   };
 
-  const sujet = (donnees.langue === 'ar' ? 'طلب عرض سعر — ' : 'Demande de devis — ')
-    + donnees.nom + (donnees.ville ? ' · ' + donnees.ville : '')
-    + ' [' + donnees.reference + ']';
+  // Les trois voies partent ensemble et ne dépendent pas les unes des autres :
+  // le WhatsApp doit fonctionner même sans compte Brevo, et le courriel doit
+  // partir même si CallMeBot est en panne.
+  const [whatsapp, sms, email] = await Promise.all([
+    envoyerWhatsapp(donnees),
+    envoyerSms(cle, donnees),
+    envoyerCourriel(cle, destinataires, donnees)
+  ]);
 
-  const envoi = {
-    sender: { name: 'Site GELCO', email: process.env.DEVIS_EXPEDITEUR || EXPEDITEUR_PAR_DEFAUT },
-    to: destinataires,
-    subject: sujet,
-    htmlContent: courriel(donnees),
-    tags: ['devis-site']
-  };
+  const voies = [whatsapp, sms, email];
+  const actives = voies.filter(v => v.actif);
 
-  // Répondre au message écrit directement au client, quand il a laissé un e-mail
-  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(donnees.email)) {
-    envoi.replyTo = { email: donnees.email, name: donnees.nom };
+  // Aucune voie configurée : on le dit clairement plutôt que d'échouer en
+  // silence. Le visiteur, lui, est déjà passé par WhatsApp de son côté.
+  if (!actives.length) {
+    return res.status(503).json({
+      ok: false, erreur: 'non configure',
+      details: 'aucune voie active — renseigner DEVIS_WHATSAPP ou BREVO_API_KEY'
+    });
   }
 
-  // Le SMS part en parallèle du courriel : il coûte de l'argent, on ne le
-  // fait donc pas dépendre de la réussite de l'autre, ni l'inverse.
-  const promesseSms = envoyerSms(cle, donnees);
-
-  try {
-    const reponse = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: {
-        'api-key': cle,
-        'content-type': 'application/json',
-        'accept': 'application/json'
-      },
-      body: JSON.stringify(envoi)
-    });
-
-    const sms = await promesseSms;
-
-    if (!reponse.ok) {
-      const texte = await reponse.text();
-      console.error('Brevo a refuse l envoi', reponse.status, texte);
-      return res.status(502).json({ ok: false, erreur: 'envoi refuse', statut: reponse.status, sms });
-    }
-
-    return res.status(200).json({
-      ok: true,
-      reference: donnees.reference,
-      destinataires: destinataires.length,
-      sms
-    });
-  } catch (e) {
-    console.error('Echec de l appel a Brevo', e);
-    // Le SMS a peut-être abouti, lui : on attend son verdict avant de répondre,
-    // sinon la promesse resterait pendante et son échec ne serait jamais traité.
-    const sms = await promesseSms;
-    return res.status(502).json({ ok: false, erreur: 'reseau', sms });
-  }
+  const aboutie = actives.some(v => v.partis > 0);
+  return res.status(aboutie ? 200 : 502).json({
+    ok: aboutie,
+    reference: donnees.reference,
+    whatsapp, sms, email
+  });
 };
