@@ -139,6 +139,44 @@ print(dst,im.size,os.path.getsize(dst)//1024,'Ko')
 
 ---
 
+## SKILL 5 : respecter le système de design
+
+Tout est déclaré en tête de `assets/css/style.css`, dans `:root`. **Aucune valeur
+ne doit être écrite en dur dans un composant** : ni couleur, ni taille de police,
+ni ombre. On change la charte à un seul endroit.
+
+| Famille | Jetons | Usage |
+|---|---|---|
+| Bleu nuit | `--navy-50` → `--navy-900` | `600` = bleu de marque · `50/100` fonds · `200/300/400` textes sur fond sombre · `700/800` survols et pied de page |
+| Rouge | `--red-50` → `--red-900` | `600` = rouge de marque, **réservé à l'action** · `700` survol · `800` enfoncé · `200` mise en valeur sur fond sombre |
+| Neutres | `--ink-200/600/900` | filets, texte atténué, texte courant. Tirés vers le bleu, jamais un gris pur. |
+| Statuts | `--ok`, `--warn`, `--alert` (+ `-bg`, `-line`) | **jamais** le rouge de marque pour une erreur : `--alert` est un brun-rouge distinct |
+| Typographie | `--t-100` (12 px) → `--t-1000` (40 px) | rapport progressif : resserré en lecture, élargi en titraille |
+| Ombres | `--shadow-sm/md/lg`, `--shadow-overlay`, `--ring` | deux couches chacune, une seule teinte |
+| Formes | `--radius-sm/-/-lg/-pill` | 8 / 12 / 16 / 999 px |
+
+Contrôle avant de livrer — les trois compteurs doivent rester à zéro :
+
+```bash
+cd "C:\Users\laani\Desktop\GELCO"
+python -c "
+import io,re
+s=io.open('assets/css/style.css',encoding='utf-8').read()
+tailles=[t for t in set(re.findall(r'font-size: ([0-9.]+px)',s))]
+hex_dur=[h for h in set(re.findall(r'#[0-9A-Fa-f]{6}',s)) if s.count(h)==1 and ':root' not in s[max(0,s.index(h)-2500):s.index(h)]]
+ombres=re.findall(r'box-shadow: 0 [^v]',s)
+print('tailles hors echelle  :',tailles or 0)
+print('couleurs hors rampe   :',hex_dur or 0)
+print('ombres hors jetons    :',len(ombres))
+"
+```
+
+Deux exceptions légitimes : les codes hexadécimaux du SVG du héros
+(`rect[fill=\"#F4F7FA\"]`) font partie du **sélecteur**, et `--green-wa` est
+imposé par WhatsApp.
+
+---
+
 ## Points de vigilance permanents
 
 | Sujet | Règle |
