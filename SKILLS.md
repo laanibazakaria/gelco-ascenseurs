@@ -15,7 +15,7 @@ Usage : dire à Claude Code « **Lance l'audit-site** » (ou le nom du skill).
 cd "C:\Users\laani\Desktop\GELCO"
 
 # 1. Pages : toutes doivent répondre 200
-B=https://gelco-ascenseurs.vercel.app
+B=https://gelcoascenseur.com
 for f in "" pieces-detachees.html capteurs.html services.html realisations.html \
          a-propos.html contact.html mentions-legales.html \
          ar/index.html ar/pieces-detachees.html ar/capteurs.html ar/services.html \

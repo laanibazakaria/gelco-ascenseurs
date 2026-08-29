@@ -16,7 +16,7 @@
  */
 
 const EXPEDITEUR_PAR_DEFAUT = 'gelcoascenseur@gmail.com';
-const SITE = 'https://gelco-ascenseurs.vercel.app';
+const SITE = 'https://gelcoascenseur.com';
 
 /* ------------------------------------------------------------------ *
  * Outils
@@ -182,7 +182,7 @@ function courriel(d) {
     + '<tr><td style="padding:28px 30px 30px;">'
     + '<div style="border-top:1px solid #DDE5EC;padding-top:18px;color:#5B6B7C;font-size:12px;line-height:1.7;">'
     + T.pied + '<br>'
-    + '<a href="' + SITE + '" style="color:#0A3D62;font-weight:700;text-decoration:none;">gelco-ascenseurs.vercel.app</a>'
+    + '<a href="' + SITE + '" style="color:#0A3D62;font-weight:700;text-decoration:none;">gelcoascenseur.com</a>'
     + '</div></td></tr>'
 
     + '</table></td></tr></table></body></html>';

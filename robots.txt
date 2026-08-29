@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gelco-ascenseurs.vercel.app/sitemap.xml
+Sitemap: https://gelcoascenseur.com/sitemap.xml

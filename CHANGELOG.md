@@ -3,7 +3,8 @@
 Ce que le site fait, et depuis quand. Écrit pour la direction, pas pour un
 développeur : l'historique technique complet est dans `git log`.
 
-**Adresse principale** : https://gelco-ascenseurs.vercel.app
+**Adresse principale** : https://gelcoascenseur.com
+**Ancienne adresse** : https://gelco-ascenseurs.vercel.app (fonctionne toujours)
 **Copie de secours** : https://laanibazakaria.github.io/gelco-ascenseurs
 
 ---
