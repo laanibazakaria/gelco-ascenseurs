@@ -978,16 +978,18 @@ a { color: var(--navy); text-decoration: none; }
 [dir="rtl"] button {
   font-family: 'Tajawal', 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
 }
+/* L'arabe n'a pas de casse : l'interlettrage prévu pour les capitales
+   latines l'abîme. On ne retire QUE cela.
+   Cette règle portait aussi position/bottom/inset, destinés au seul
+   .project-city — qui les a déjà dans sa propre règle. Appliqués à
+   .brand-chip, ils empilaient les huit marques au même endroit ; sur
+   .overline, .part-cat et .brand-text ils les décrochaient du flux. */
 [dir="rtl"] .brand-text,
 [dir="rtl"] .brand-text small,
 [dir="rtl"] .overline,
 [dir="rtl"] .part-cat,
 [dir="rtl"] .brand-chip,
 [dir="rtl"] .project-city {
-  position: absolute;
-  z-index: 2;
-  bottom: 14px;
-  inset-inline-start: 14px;
   letter-spacing: 0;
 }
 [dir="rtl"] .main-nav { margin-left: 0; margin-right: auto; }
