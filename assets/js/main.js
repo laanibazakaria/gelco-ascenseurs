@@ -112,7 +112,7 @@ if (quoteForm) {
 
     if (parEmail) {
       const sujet = isArabic ? 'طلب عرض سعر — جيلكو للمصاعد' : 'Demande de devis — Site GELCO';
-      window.location.href = 'mailto:grand.elevators.company@gmail.com'
+      window.location.href = 'mailto:gelcoascenseur@gmail.com'
         + '?subject=' + encodeURIComponent(sujet)
         + '&body=' + encodeURIComponent(corps);
     } else {

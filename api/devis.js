@@ -10,12 +10,12 @@
  *   DEVIS_DESTINATAIRES  adresses séparées par des virgules, au format
  *                        « Ayoub Laaniba <ayoub@exemple.ma>, Said Morchid <...> »
  *   DEVIS_EXPEDITEUR     adresse vérifiée dans Brevo
- *                        (par défaut grand.elevators.company@gmail.com)
+ *                        (par défaut gelcoascenseur@gmail.com)
  *
  * Aucune dépendance : l'API Brevo est appelée en HTTP.
  */
 
-const EXPEDITEUR_PAR_DEFAUT = 'grand.elevators.company@gmail.com';
+const EXPEDITEUR_PAR_DEFAUT = 'gelcoascenseur@gmail.com';
 const SITE = 'https://gelco-ascenseurs.vercel.app';
 
 /* ------------------------------------------------------------------ *
