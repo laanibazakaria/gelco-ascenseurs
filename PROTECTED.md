@@ -40,6 +40,11 @@ du contenu dupliqué.
 - Le titre existe à **trois endroits** (`title`, `og:title`, `twitter:title`) :
   les trois doivent rester identiques.
 
+### `google6a51ccad6ec2753d.html` — la preuve de propriete Google
+Fichier d'une seule ligne, a la racine. Google revient le lire regulierement :
+**le supprimer fait perdre la propriete du site dans Search Console**, et avec
+elle les statistiques de recherche et la soumission du plan du site.
+
 ### `vercel.json`, `sitemap.xml`, `robots.txt`
 En-têtes de cache et déclaration des pages aux moteurs. Une erreur de
 syntaxe dans `vercel.json` fait échouer le déploiement entier.

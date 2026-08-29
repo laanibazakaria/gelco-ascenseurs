@@ -8,6 +8,36 @@ développeur : l'historique technique complet est dans `git log`.
 
 ---
 
+## 29 août 2026 — Le site devient mesurable
+
+**Nouvelle adresse de l'entreprise.** `gelcoascenseur@gmail.com` remplace
+l'ancienne, partout : pied de page, contact, mentions légales, formulaire,
+fiche Google et fonction serveur — 66 emplacements.
+
+> ⚠️ L'ancienne adresse figure sans doute encore sur la fiche Google Business,
+> les factures et les cartes de visite. **Gardez l'ancienne boîte ouverte et
+> surveillée** tant que ces supports n'ont pas été repris, sinon des demandes
+> se perdront sans que personne le sache.
+
+**Mesure d'audience activée.** Vercel Web Analytics compte désormais les
+visiteurs, les pages consultées, les villes et les appareils. Sans cookie,
+gratuit. À consulter dans l'onglet *Analytics* du projet Vercel. La mesure de
+vitesse d'affichage fonctionne également.
+
+**Site déclaré à Google Search Console.** Propriété validée par un fichier de
+preuve à la racine, plan du site soumis avec ses 16 adresses. Les premières
+données apparaissent sous quelques jours dans *Performances* : les recherches
+qui amènent des visiteurs, la position moyenne, le nombre de clics.
+
+> ⚠️ Le fichier `google6a51ccad6ec2753d.html` à la racine du site **ne doit
+> jamais être supprimé** : Google revient le vérifier, et sa disparition ferait
+> perdre la propriété du site dans Search Console.
+
+**Photos allégées.** Les 61 photos sont servies en WebP — 35 % de moins à
+télécharger — avec repli automatique en JPEG pour les téléphones anciens.
+
+---
+
 ## 29 août 2026 — Reprise complète des deux langues
 
 **Version arabe.** Huit composants étaient décrochés de la mise en page sur
@@ -93,7 +123,8 @@ Ces points ne dépendent pas du site mais de démarches de l'entreprise :
 
 | À faire | Pourquoi |
 |---|---|
-| Revendiquer la fiche Google Business | Elle affiche encore une adresse de site erronée |
+| Revendiquer la fiche Google Business | Elle affiche encore une adresse de site erronée, et l'ancienne adresse e-mail |
+| Reprendre factures et cartes de visite | Elles portent l'ancienne adresse e-mail |
 | Confirmer les chiffres réels (années, chantiers, stock) | Rien d'invérifiable n'a été publié |
 | Recueillir de vrais avis Google | Aucun témoignage n'a été inventé |
 | Refaire le marquage de la camionnette | Elle porte une adresse périmée |
