@@ -9,6 +9,31 @@ développeur : l'historique technique complet est dans `git log`.
 
 ---
 
+## 29 août 2026 — GELCO a son propre nom de domaine
+
+Le site vit désormais à l'adresse **gelcoascenseur.com**, achetée pour un an
+(~110 DH, renouvellement automatique activé). Le nom reprend exactement
+l'adresse e-mail de l'entreprise — une seule identité partout.
+
+L'ancienne adresse `gelco-ascenseurs.vercel.app` continue de fonctionner :
+aucun lien déjà partagé n'est perdu. Mais toutes les pages désignent
+maintenant le domaine propre comme adresse de référence, ce qui indique à
+Google laquelle indexer.
+
+234 emplacements repris : adresses de référence des 17 pages, 48 déclarations
+de correspondance français/arabe, aperçus de partage WhatsApp et Facebook,
+fiche entreprise, plan du site, et le QR code — **l'ancien QR code imprimé
+est à jeter**.
+
+Nouvelle propriété déclarée à Search Console, plan du site resoumis.
+
+> ⚠️ **Le domaine est un abonnement annuel.** Si personne ne renouvelle,
+> le site devient inaccessible du jour au lendemain. Vérifiez que l'adresse
+> de facturation est complète dans Vercel et que les rappels partent bien
+> sur `gelcoascenseur@gmail.com`.
+
+---
+
 ## 29 août 2026 — Le site devient mesurable
 
 **Nouvelle adresse de l'entreprise.** `gelcoascenseur@gmail.com` remplace
