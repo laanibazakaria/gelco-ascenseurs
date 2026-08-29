@@ -149,7 +149,7 @@ Ces points ne dépendent pas du site mais de démarches de l'entreprise :
 
 | À faire | Pourquoi |
 |---|---|
-| **Récupérer la fiche Google Business — à partir du 5 septembre 2026** | Voir l'encadré ci-dessous |
+| **Récupérer la fiche Google Business — à partir du 1er septembre 2026** | Voir l'encadré ci-dessous |
 | Reprendre factures et cartes de visite | Elles portent l'ancienne adresse e-mail |
 | Confirmer les chiffres réels (années, chantiers, stock) | Rien d'invérifiable n'a été publié |
 | Recueillir de vrais avis Google | Aucun témoignage n'a été inventé |
@@ -169,12 +169,15 @@ cette adresse ne fonctionne plus.
 C'est pourquoi les demandes de correction envoyées par le passé n'ont jamais
 abouti : elles partaient à ce compte, qui ne répond pas.
 
-**Ce qui a été fait.** Une demande d'accès a été déposée le **29 août 2026**
-depuis `gelcoascenseur@gmail.com`, sur `business.google.com`. Cette étape est
+**Ce qui a été fait.** Une demande d'accès en **propriété** a été déposée le
+**29 août 2026** depuis `gelcoascenseur@gmail.com`, sur `business.google.com`.
+Google a répondu : si le titulaire ne réagit pas **avant le 1er septembre
+2026**, l'accès pourra être obtenu. Cette étape est
 obligatoire : Google exige une demande restée sans réponse avant de
 transférer une fiche.
 
-**Ce qu'il reste à faire — à partir du 5 septembre 2026 :**
+**Ce qu'il reste à faire — à partir du 1er septembre 2026** (date annoncée par
+Google au moment de l'envoi) **:**
 
 1. retourner sur `business.google.com`, connecté avec `gelcoascenseur@gmail.com`
 2. chercher `GELCO ASCENSEUR`
