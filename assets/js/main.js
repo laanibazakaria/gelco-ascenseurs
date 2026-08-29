@@ -215,6 +215,17 @@ const galleryCards = document.querySelectorAll('.part-card[data-imgs]');
 if (galleryCards.length) {
   const isAr = document.documentElement.lang === 'ar';
   const prefix = isAr ? '../assets/img/' : 'assets/img/';
+
+  // La galerie construit ses images en JavaScript : <picture> ne s'y applique
+  // pas. On teste une fois si le navigateur lit le WebP, et on sert le bon
+  // format. Les navigateurs qui ne le lisent pas gardent le JPEG.
+  const litWebp = (() => {
+    try {
+      return document.createElement('canvas')
+        .toDataURL('image/webp').indexOf('data:image/webp') === 0;
+    } catch (e) { return false; }
+  })();
+  const fichier = nom => prefix + (litWebp ? nom.replace(/\.jpg$/i, '.webp') : nom);
   const lb = document.createElement('div');
   lb.className = 'lightbox';
   lb.setAttribute('role', 'dialog');
@@ -240,7 +251,7 @@ if (galleryCards.length) {
 
   const show = i => {
     idx = (i + imgs.length) % imgs.length;
-    lbImg.src = prefix + imgs[idx];
+    lbImg.src = fichier(imgs[idx]);
     lbThumbs.querySelectorAll('img').forEach((t, k) => t.classList.toggle('active', k === idx));
   };
 
@@ -257,7 +268,7 @@ if (galleryCards.length) {
       lbThumbs.innerHTML = '';
       imgs.forEach((src, k) => {
         const t = document.createElement('img');
-        t.src = prefix + src;
+        t.src = fichier(src);
         t.alt = '';
         t.addEventListener('click', e => { e.stopPropagation(); show(k); });
         lbThumbs.appendChild(t);
@@ -295,8 +306,13 @@ if (galleryCards.length) {
 // d'operer. img.src donne l'adresse absolue ; une adresse relative serait
 // resolue depuis la feuille de style (/assets/css/) et non depuis la page.
 document.querySelectorAll('.part-visual img, .project-visual img').forEach(img => {
+  // L'image est enveloppée dans un <picture> : son parent direct n'est plus
+  // le conteneur, d'où closest(). Et currentSrc dit quel format le navigateur
+  // a réellement retenu — utiliser src rechargerait le JPEG pour rien.
+  const conteneur = img.closest('.part-visual, .project-visual');
   const poser = () => {
-    if (img.src) img.parentElement.style.setProperty('--ph', 'url("' + img.src + '")');
+    const source = img.currentSrc || img.src;
+    if (source && conteneur) conteneur.style.setProperty('--ph', 'url("' + source + '")');
   };
   if (img.complete && img.naturalWidth) poser();
   else img.addEventListener('load', poser, { once: true });

@@ -132,6 +132,12 @@ body {
 
 img, svg { max-width: 100%; display: block; }
 
+/* <picture> n'existe que pour proposer le WebP : il ne doit peser sur
+   aucune mise en page. display:contents le fait disparaître de la boîte,
+   l'image se comporte comme si elle était restée enfant direct. */
+picture { display: contents; }
+
+
 a { color: var(--navy); text-decoration: none; }
 
 .container {
