@@ -230,7 +230,8 @@
         <p style="color:var(--muted);">Le formulaire de devis de ce site n'enregistre aucune donnée sur nos serveurs. Les informations que vous saisissez servent uniquement à composer le message que vous nous envoyez, par WhatsApp ou par e-mail, depuis votre propre appareil. Vous restez maître de l'envoi jusqu'au dernier moment.</p>
         <p style="color:var(--muted);margin-top:12px;">Les coordonnées que vous nous transmettez sont utilisées exclusivement pour traiter votre demande et vous répondre. Elles ne sont ni vendues, ni cédées à des tiers. Conformément à la loi 09-08 relative à la protection des personnes physiques à l'égard du traitement des données à caractère personnel, vous disposez d'un droit d'accès, de rectification et de suppression : écrivez-nous à <a href="mailto:grand.elevators.company@gmail.com">grand.elevators.company@gmail.com</a>.</p>
         <p style="color:var(--muted);margin-top:12px;">Lorsque vous remplissez le formulaire de devis, votre demande est transmise automatiquement, sur WhatsApp, aux trois responsables de GELCO afin qu'aucune sollicitation ne reste sans réponse. Cet acheminement est assuré par le service technique <strong>CallMeBot</strong>, par lequel transitent votre nom, votre numéro et le contenu de votre message ; ce service ne les réutilise pas. Une copie peut également être envoyée par courrier électronique via <strong>Brevo</strong> (Sendinblue SAS, France). Aucune demande n'est conservée sur ce site : il ne dispose d'aucune base de données. Si vous préférez ne pas passer par ces services, appelez-nous directement au <a href="tel:+212528323258">05 28 32 32 58</a>.</p>
-        <p style="color:var(--muted);margin-top:12px;">Ce site ne dépose aucun cookie publicitaire ni traceur de mesure d'audience. La carte de localisation est fournie par Google Maps, dont les conditions d'utilisation s'appliquent lors de son affichage.</p>
+<p style="color:var(--muted);margin-top:12px;">Ce site mesure sa frequentation avec <strong>Vercel Web Analytics</strong>, un outil <strong>sans cookie</strong> : il compte les pages consultees, le pays et le type d'appareil, sans deposer de traceur ni permettre de vous identifier ni de vous suivre d'un site a l'autre. Aucune donnee n'est revendue. Un outil de mesure de la vitesse d'affichage, du meme editeur et selon les memes principes, complete ce dispositif.</p>
+                <p style="color:var(--muted);margin-top:12px;">Ce site ne dépose aucun cookie publicitaire ni traceur de mesure d'audience. La carte de localisation est fournie par Google Maps, dont les conditions d'utilisation s'appliquent lors de son affichage.</p>
       </div>
 
       <div class="section-head">
@@ -304,5 +305,11 @@
   </a>
 
   <script src="assets/js/main.js?v=11"></script>
+  <!-- Mesure d'audience et de performance Vercel : sans cookie, sans
+       identification des personnes. Voir les mentions legales. -->
+  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>
