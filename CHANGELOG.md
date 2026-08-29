@@ -149,9 +149,47 @@ Ces points ne dépendent pas du site mais de démarches de l'entreprise :
 
 | À faire | Pourquoi |
 |---|---|
-| Revendiquer la fiche Google Business | Elle affiche encore une adresse de site erronée, et l'ancienne adresse e-mail |
+| **Récupérer la fiche Google Business — à partir du 5 septembre 2026** | Voir l'encadré ci-dessous |
 | Reprendre factures et cartes de visite | Elles portent l'ancienne adresse e-mail |
 | Confirmer les chiffres réels (années, chantiers, stock) | Rien d'invérifiable n'a été publié |
 | Recueillir de vrais avis Google | Aucun témoignage n'a été inventé |
 | Refaire le marquage de la camionnette | Elle porte une adresse périmée |
 | Transférer les comptes GitHub et Vercel à GELCO | Ils sont aujourd'hui au nom de Zakaria |
+
+---
+
+## La fiche Google Business — où on en est
+
+**Situation.** La fiche `GELCO ASCENSEUR` existe, affiche la bonne adresse et
+porte déjà **3 avis clients notés 5,0 sur 5**. Mais elle est gérée par un
+compte `da…@gmail.com` que la direction ne connaît pas — vraisemblablement la
+personne qui avait réalisé l'ancien site `wix-vibe.com`. Le chef indique que
+cette adresse ne fonctionne plus.
+
+C'est pourquoi les demandes de correction envoyées par le passé n'ont jamais
+abouti : elles partaient à ce compte, qui ne répond pas.
+
+**Ce qui a été fait.** Une demande d'accès a été déposée le **29 août 2026**
+depuis `gelcoascenseur@gmail.com`, sur `business.google.com`. Cette étape est
+obligatoire : Google exige une demande restée sans réponse avant de
+transférer une fiche.
+
+**Ce qu'il reste à faire — à partir du 5 septembre 2026 :**
+
+1. retourner sur `business.google.com`, connecté avec `gelcoascenseur@gmail.com`
+2. chercher `GELCO ASCENSEUR`
+3. le bouton devrait afficher **« Revendiquer cet établissement »** au lieu de
+   « Demander l'accès » — le titulaire n'ayant pas répondu
+4. suivre la validation (probablement une vidéo continue du local, de
+   l'enseigne, du stock et d'un justificatif au nom de GELCO)
+
+**Une fois la fiche récupérée, corriger :**
+
+| Champ | Actuel | À mettre |
+|---|---|---|
+| Site Web | `wix-vibe.com` | `https://gelcoascenseur.com` |
+| Téléphone | 06 61 93 95 41 | 05 28 32 32 58 (le fixe) |
+| E-mail | ancienne adresse | `gelcoascenseur@gmail.com` |
+
+> ⚠️ **Ne jamais créer une seconde fiche** pendant l'attente. Google suspend
+> les doublons, et les 3 avis 5 étoiles seraient perdus avec.
