@@ -388,6 +388,55 @@ async function envoyerWhatsapp(d) {
 }
 
 /* ------------------------------------------------------------------ *
+ * Limite de cadence
+ *
+ * C'est le seul point d'entrée public du site. Sans garde-fou, on peut
+ * l'appeler mille fois par minute : aujourd'hui sans conséquence, mais
+ * le jour où le SMS est activé, chaque appel coûte de l'argent.
+ *
+ * HONNÊTETÉ SUR LA PORTÉE : ce compteur vit dans la mémoire de
+ * l'instance. Vercel en démarre plusieurs et les éteint après un temps
+ * d'inactivité, donc un attaquant déterminé passe au travers. Cela
+ * arrête un envoi en rafale et une erreur de script — pas une attaque
+ * construite. Une protection stricte demanderait un stockage partagé,
+ * hors de portée d'un site sans base de données.
+ * ------------------------------------------------------------------ */
+
+const FENETRE_MS = 10 * 60 * 1000;   // 10 minutes
+const MAX_PAR_IP = 5;                // au-delà, un humain n'envoie plus un devis
+const MAX_GLOBAL = 40;               // second filet, tous demandeurs confondus
+
+const passages = new Map();          // ip -> [horodatages]
+
+function demandeur(req) {
+  const entetes = req.headers || {};
+  const suivi = entetes["x-forwarded-for"] || entetes["x-real-ip"] || "";
+  return String(suivi).split(",")[0].trim() || "inconnu";
+}
+
+function cadenceDepassee(req) {
+  const maintenant = Date.now();
+  const debut = maintenant - FENETRE_MS;
+
+  // On purge en même temps qu'on lit : la table ne peut pas enfler
+  let total = 0;
+  for (const [cle, dates] of passages) {
+    const recents = dates.filter(d => d > debut);
+    if (recents.length) { passages.set(cle, recents); total += recents.length; }
+    else passages.delete(cle);
+  }
+
+  const ip = demandeur(req);
+  const siennes = passages.get(ip) || [];
+
+  if (siennes.length >= MAX_PAR_IP) return { bloque: true, motif: "ip", vus: siennes.length };
+  if (total >= MAX_GLOBAL)          return { bloque: true, motif: "global", vus: total };
+
+  passages.set(ip, siennes.concat(maintenant));
+  return { bloque: false };
+}
+
+/* ------------------------------------------------------------------ *
  * La fonction
  * ------------------------------------------------------------------ */
 
@@ -403,8 +452,17 @@ module.exports = async function handler(req, res) {
   }
   corps = corps || {};
 
-  // Piège à robots : un champ que seul un automate remplit
+  // Piège à robots : un champ que seul un automate remplit.
+  // Placé avant la limite de cadence : un robot déjà démasqué ne doit pas
+  // consommer le quota d'un visiteur légitime derrière la même adresse.
   if (corps.societe) return res.status(200).json({ ok: true });
+
+  const cadence = cadenceDepassee(req);
+  if (cadence.bloque) {
+    console.warn('Cadence depassee', cadence.motif, cadence.vus, demandeur(req));
+    res.setHeader('Retry-After', String(Math.ceil(FENETRE_MS / 1000)));
+    return res.status(429).json({ ok: false, erreur: 'trop de demandes', motif: cadence.motif });
+  }
 
   // Le nom et le téléphone suffisent à rappeler quelqu'un ; le reste est un plus
   const nom = String(corps.nom || '').trim().slice(0, 120);
